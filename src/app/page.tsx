@@ -1,95 +1,50 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-
+import Image from 'next/image';
+import styles from './page.module.scss';
+import dynamic from 'next/dynamic';
+import { Spin } from 'antd';
+const Header = dynamic(() => import('./_components/header/header'), {
+  loading: () => <Spin />,
+  ssr: false,
+});
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      {' '}
+      <Header />
+      <main className={styles.main}>
+        <div className={`${styles.content_container}`}>
+          <h2>به سیستم پشتیبانی برج‌های شهرک چیتگر خوش‌آمدید.</h2>
+          <ul>
+            <li>
+              این سیستم با هدف دریافت درخواست های پشتیبانی سرویس های فعال بر
+              بستر FTTH شامل IPTV، آیفون تصویری، اینترنت، تلفن و سیستم نظارت
+              تصویری ساختمان ها طراحی گردیده است.
+            </li>
+            <li>
+              زمان پاسخ دهی به تیکت های ارسالی شما حداکثر دو روز کاری و در حین
+              ساعات اداری 8 الی 17:30 می باشد. لازم به ذکر است در صورتی که خرابی
+              غیر عرفی وجود داشته باشد یا رفع درخواست شما نیازمند عملیات سازمانی
+              دیگر همانند مخابرات باشد این زمان ممکن است بیشتر از این مقدار طول
+              بکشد. خواهشمند است در هر صورت از طریق تیکت با ما در ارتباط باشید.
+            </li>
+            <li>
+              لطفا از تماس تلفنی با هر یک از کارشناسان پشتیبانی مجموعه خودداری
+              فرمائید.
+            </li>
+            <li>
+              لازم به ذکر است ثبت‌نام در سایت جهت ارسال تیکت الزامی می‌باشد. شما
+              می توانید نتیجه انجام درخواست خود را از طریق ورود مجدد به همین
+              سایت مشاهده فرمائید.
+            </li>
+          </ul>
         </div>
-      </div>
-
-      <div className={styles.center}>
         <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+          width={600}
+          height={600}
+          src={'/image/tower3.jpg'}
+          className={`${styles.img}`}
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
