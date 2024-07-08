@@ -1,0 +1,24 @@
+.header_container {
+  padding: 10px;
+  border: 1px solid #fff9f1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .list_menu {
+    display: flex;
+    align-items: center;
+    // border: 1px solid red;
+    column-gap: 20px;
+    li {
+      font-size: 16px;
+    }
+    .auth_container {
+      display: flex;
+      align-items: center;
+      button {
+        font-size: 16px;
+        padding: 0;
+      }
+    }
+  }
+}

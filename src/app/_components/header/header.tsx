@@ -1,0 +1,66 @@
+'use client';
+import { Button, Tooltip } from 'antd';
+import style from './header.module.scss';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { getCookies, removeCookies } from '@/lib/cookies';
+import { getStorage, removeStorage } from '@/lib/storage';
+import { GoSignIn } from 'react-icons/go';
+import { CiLogout } from 'react-icons/ci';
+import { useEffect, useState } from 'react';
+
+const Header = () => {
+  const router = useRouter();
+  const [userLable, setUserlable] = useState('ورود');
+  const user_info = getStorage('user_name' ?? '{}');
+  const logoutHandler = () => {
+    removeStorage('user_id');
+    removeStorage('user_name');
+    removeCookies('access');
+    removeCookies('refresh');
+    setUserlable('ورود');
+    router.push('/');
+  };
+  useEffect(() => {
+    if (user_info) setUserlable(user_info);
+  }, [userLable, router]);
+
+  return (
+    <div className={`${style.header_container}`}>
+      <Image width={55} height={55} alt="" src="/image/logo.webp" />
+      <ul className={`${style.list_menu}`}>
+        <li>
+          <Link href="/">صفحه اصلی</Link>
+        </li>
+        <li>
+          <Link href="">تماس با ما</Link>
+        </li>
+        <li>
+          <Link href="#">ارسال تیکت</Link>
+        </li>
+        {/* <li> */}
+        {getCookies('access') ? (
+          <div className={`${style.auth_container}`}>
+            {' '}
+            <Button type="text">{userLable}</Button>
+            <Tooltip title="خروج">
+              {' '}
+              <Button type="text" onClick={logoutHandler}>
+                {' '}
+                <CiLogout size={22} />
+              </Button>
+            </Tooltip>
+          </div>
+        ) : (
+          <Button type="primary" onClick={() => router.push('/auth/signin')}>
+            {userLable}
+            <GoSignIn size={21} />
+          </Button>
+        )}
+      </ul>
+    </div>
+  );
+};
+
+export default Header;
