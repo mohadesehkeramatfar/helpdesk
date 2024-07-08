@@ -29,7 +29,6 @@ const PasswordSignin = () => {
       };
       const { data: responsedLogin } = await postUnitLogin({ data });
       const { tokens } = responsedLogin;
-
       setToken(tokens.access);
       setRefreshToken(tokens.refresh);
       router.push('/send-ticket');
@@ -40,12 +39,14 @@ const PasswordSignin = () => {
         toast.error(generalMessage);
       }
     }
-    // try {
-    //   const getUserInfoResponsed = await getUserInfo();
-    //   console.log('getUserInfoResponsed', getUserInfoResponsed);
-    // } catch (error) {
-    //   console.log('erorr 2222', error);
-    // }
+    try {
+      const { data: getUserInfoResponsed } = await getUserInfo();
+      const userName =
+        getUserInfoResponsed.first_name + ' ' + getUserInfoResponsed.last_name;
+      setStorage('user_name', userName);
+    } catch (error) {
+      toast.error(generalMessage);
+    }
   };
   const formItems = [
     {

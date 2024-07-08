@@ -8,4 +8,5 @@ export const API_ENDPOINTS = {
   GET_BUILDINGS_LIST: '/users/buildings_list/',
   GET_FACING_SIDE: '/users/facing_sides_list/',
   WHO_AM_I: '/users/whoami/',
+  REFRESH_TOKEN: '/api/token/refresh/',
 };

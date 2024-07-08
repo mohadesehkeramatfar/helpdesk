@@ -1,6 +1,10 @@
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { usePostValidateOtp, useSubmitLogin } from '../api/auth';
+import {
+  useGetUserInfo,
+  usePostValidateOtp,
+  useSubmitLogin,
+} from '../api/auth';
 import AuthForm from './authForm/authForm';
 import { Button, Form, Input } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
@@ -8,6 +12,7 @@ import { generalMessage } from '@/lib/alertMessage';
 import { setRefreshToken, setToken } from '@/lib/token';
 import { ToastComponent } from '@/app/_components/toast/toast';
 import { useEffect, useRef, useState } from 'react';
+import { setStorage } from '@/lib/storage';
 
 const OtpSignin = () => {
   const router = useRouter();
@@ -22,8 +27,7 @@ const OtpSignin = () => {
   const [timeLeft, setTimeLeft] = useState(60);
   const timerRef = useRef(null);
   const [isActive, setIsActive] = useState(true);
-
-  // 60000
+  const { trigger: getUserInfo } = useGetUserInfo();
 
   const otpHandler = async (values: { otp: string }) => {
     const { otp } = values;
@@ -41,6 +45,14 @@ const OtpSignin = () => {
       router.push('/send-ticket');
     } catch (error) {
       toast.error(error.response.data);
+    }
+    try {
+      const { data: getUserInfoResponsed } = await getUserInfo();
+      const userName =
+        getUserInfoResponsed.first_name + ' ' + getUserInfoResponsed.last_name;
+      setStorage('user_name', userName);
+    } catch (error) {
+      toast.error(generalMessage);
     }
   };
   const reOtpHandler = async () => {
