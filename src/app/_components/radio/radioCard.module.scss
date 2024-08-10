@@ -1,0 +1,60 @@
+@import '@/app/variables.module.scss';
+// .radio_card_container {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   column-gap: 15px;
+//   border: 1px solid $primary;
+//   padding: 8px;
+//   // width: 280px;
+//   max-width: max-content;
+//   border-radius: 7px;
+//   align-items: center;
+//   .title_container {
+//     display: flex;
+//     align-items: center;
+//     column-gap: 14px;
+//   }
+//   img {
+//     border-radius: 8px !important;
+//   }
+//   .title {
+//     white-space: nowrap;
+//   }
+//   .radio_group {
+//     display: flex;
+//     flex-direction: row-reverse;
+//   }
+// }
+.rectangle {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  column-gap: 35px;
+  border: 1px solid $primary;
+  // width: 280px;
+  max-width: max-content;
+  border-radius: 7px;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  img {
+    border-radius: 8px !important;
+  }
+}
+
+.rectangle.selected {
+  background-color: #f0f0f0; /* Example of selected state background color */
+}
+
+.leftSide {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  column-gap: 10px;
+  .text {
+    // margin-left: 10px;
+
+    font-size: 1.4rem;
+  }
+}
