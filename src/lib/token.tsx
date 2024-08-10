@@ -16,10 +16,6 @@ export const getToken = () => {
 export const getRefreshToken = () => {
   return getCookies('refresh');
 };
-// export const getPrivileges = () => {
-//   const privilegesValue = getCookies('privileges');
-//   return privilegesValue?.split(',');
-// };
 
 export const setToken = (token: string): void => {
   const decoded = decodeToken(token);

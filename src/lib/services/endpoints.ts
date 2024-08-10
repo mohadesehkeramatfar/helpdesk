@@ -9,4 +9,13 @@ export const API_ENDPOINTS = {
   GET_FACING_SIDE: '/users/facing_sides_list/',
   WHO_AM_I: '/users/whoami/',
   REFRESH_TOKEN: '/api/token/refresh/',
+
+  //* TICKET
+  GET_PARENT_CATEGORY_TICKET_LIST: '/ticket/parent_categories_list/',
+  GET_SUB_CATEGORY_TICKET_LIST: '/ticket/sub_categories_list/',
+  POST_UNIT_TICKET_SUBMIT: '/ticket/unit_ticket_submit/',
+  POST_UNIT_TICKET_POST_SUBMIT: '/ticket/unit_ticket_post_submit/',
+  GET_UNIT_TICKET_LIST: '/ticket/unit_tickets_list/',
+  GET_UNIT_TICKET_Detail: '/ticket/unit_ticket_detail/',
+  //
 };

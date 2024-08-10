@@ -3,7 +3,7 @@ import { getRefreshToken, getToken, setToken } from '../token';
 import { API_ENDPOINTS } from './endpoints';
 
 export const client = axios.create({
-  baseURL: 'http://172.16.203.57:8080',
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 const renewToken = async () => {
@@ -41,7 +41,7 @@ export const request = async (
     let token = getToken();
 
     if (!token) {
-      // token = await renewToken();
+      token = await renewToken();
     }
     config.headers = {
       'Content-Type': isFormData ? `multipart/form-data` : 'application/json',
