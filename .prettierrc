@@ -1,0 +1,22 @@
+{
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 80,
+  "tabWidth": 2,
+  "endOfLine": "lf",
+  "jsxBracketSameLine": false,
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrder": [
+    "^react$",
+    "^next(.*)$",
+    "(.*)redux(.*)",
+    "^@libs(.*)$",
+    "^@API(.*)$",
+    "^@components(.*)|./(.+)(?<!scss)$",
+    "^@icons(.*)$",
+    "^(.*).scss$",
+    "^[./]"
+  ]
+}
