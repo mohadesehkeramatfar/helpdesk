@@ -1,5 +1,5 @@
 'use client';
-import { Skeleton, Space } from 'antd';
+import { Skeleton } from 'antd';
 import style from './authSkeleton.module.scss';
 const AuthSkeleton = () => {
   return (

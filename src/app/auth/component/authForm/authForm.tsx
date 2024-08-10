@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import style from './authForm.module.scss';
 import Image from 'next/image';

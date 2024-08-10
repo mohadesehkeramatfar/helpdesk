@@ -1,13 +1,16 @@
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import AuthForm from './authForm/authForm';
 import { useSubmitLogin } from '../api/auth';
-import { Input } from 'antd';
+import { Input, Typography } from 'antd';
 import { validatePhoneNumber } from '@/lib/utils';
 import { toast } from 'react-toastify';
 import { ToastComponent } from '@/app/_components/toast/toast';
 import { generalMessage } from '@/lib/alertMessage';
+import Title from 'antd/es/typography/Title';
 const Signin = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sendTicket = searchParams.get('send-ticket');
   const { trigger: submitLogin, isMutating: isLoadingSubmitLogin } =
     useSubmitLogin();
 
@@ -41,6 +44,12 @@ const Signin = () => {
         return;
       } else {
         if (submitLoginResponsed.method === 'password') {
+          if (sendTicket) {
+            router.push(
+              `signin/password?phone=${submitLoginResponsed.phone}&send-ticket=send-ticket`,
+            );
+            return;
+          }
           router.push(`signin/password?phone=${submitLoginResponsed.phone}`);
           return;
         }
@@ -63,7 +72,10 @@ const Signin = () => {
         finishFormHandler={loginHandler}
       >
         <>
-          <h2>ثبت نام | ورود</h2>
+          <Typography>
+            <Title level={4}>ثبت نام | ورود</Title>
+          </Typography>
+
           <p>* لطفا شماره موبایل خود را وارد کنید</p>
         </>
       </AuthForm>

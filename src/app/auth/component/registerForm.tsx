@@ -5,11 +5,10 @@ import {
 } from '@/app/(users)/api/unitList';
 import { usePostUnitRegister } from '../api/auth';
 import AuthForm from './authForm/authForm';
-import { useEffect, useState } from 'react';
 import { extractDropDownItems, validateNumber } from '@/lib/utils';
-import { Input, Select, Spin, message } from 'antd';
+import { Input, Select, Spin } from 'antd';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { generalMessage, unitSuccessfullRegister } from '@/lib/alertMessage';
 import { setRefreshToken, setToken } from '@/lib/token';
 import { setStorage } from '@/lib/storage';
@@ -35,7 +34,6 @@ const RegisterForm = () => {
     confirmPassword: string;
   }) => {
     const { first_name, last_name, unit_number, building, password } = values;
-    console.log('password', password);
 
     const data = {
       first_name,
@@ -58,7 +56,6 @@ const RegisterForm = () => {
         registerResponse.data.last_name;
       setToken(registerResponse.data.tokens.access);
       setStorage('user_name', userName);
-      console.log('userName', userName);
 
       setRefreshToken(registerResponse.data.tokens.refresh);
       toast.success(unitSuccessfullRegister);

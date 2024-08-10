@@ -4,11 +4,7 @@ import AuthForm from './authForm/authForm';
 import { Input } from 'antd';
 import { ToastComponent } from '@/app/_components/toast/toast';
 import { toast } from 'react-toastify';
-import {
-  generalMessage,
-  unitSuccessfullRegister,
-  wrongPassword,
-} from '@/lib/alertMessage';
+import { generalMessage, wrongPassword } from '@/lib/alertMessage';
 import { setRefreshToken, setToken } from '@/lib/token';
 import { setStorage } from '@/lib/storage';
 
@@ -18,7 +14,7 @@ const PasswordSignin = () => {
   const { trigger: postUnitLogin } = usePostUnitLogin();
   const { trigger: getUserInfo } = useGetUserInfo();
   const phone = searchParams.get('phone');
-
+  const sendTicket = searchParams.get('send-ticket');
   const passwordHandler = async (values: { password: string }) => {
     const { password } = values;
 
@@ -31,7 +27,12 @@ const PasswordSignin = () => {
       const { tokens } = responsedLogin;
       setToken(tokens.access);
       setRefreshToken(tokens.refresh);
-      router.push('/send-ticket');
+
+      if (sendTicket) {
+        router.push('/send-ticket');
+      } else {
+        router.push('/');
+      }
     } catch (error) {
       if (error?.response?.data[0] == 'Unit not found') {
         toast.error(wrongPassword);

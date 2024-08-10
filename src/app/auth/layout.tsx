@@ -1,6 +1,4 @@
-import { Steps } from 'antd';
 import style from './layout.module.scss';
-import Image from 'next/image';
 const AuthLayout = ({
   children,
 }: Readonly<{

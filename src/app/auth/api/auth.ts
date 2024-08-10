@@ -1,6 +1,5 @@
 import { request } from '@/lib/services/baseURL';
 import { API_ENDPOINTS } from '@/lib/services/endpoints';
-import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 export const useSubmitLogin = () => {
