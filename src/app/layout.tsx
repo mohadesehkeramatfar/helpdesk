@@ -3,8 +3,7 @@ import './globals.css';
 import { IranYekanX } from '../definitions/fonts';
 import { ConfigProvider } from 'antd';
 import faIR from 'antd/locale/fa_IR';
-import Header from './_components/header/header';
-import style from './layout.module.scss';
+
 import 'react-toastify/dist/ReactToastify.css';
 export const metadata: Metadata = {
   title: 'پشتیبانی سیستم‌های جریان ضعیف شهرک چیتگر',
@@ -18,9 +17,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" className={IranYekanX.variable}>
-      <ConfigProvider direction="rtl" locale={faIR}>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: '#0098a9',
+            borderRadius: 4,
+            fontFamily: IranYekanX.style.fontFamily,
+          },
+        }}
+        direction="rtl"
+        locale={faIR}
+      >
         <body>
-          <div className={`${style.container}`}>{children}</div>
+          <div>{children}</div>
         </body>
       </ConfigProvider>
     </html>

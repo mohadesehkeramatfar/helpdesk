@@ -7,8 +7,12 @@
 
   .content_container {
     line-height: 60px;
+    h2 {
+      font-size: 1.8rem;
+    }
     ul li {
       list-style-type: disc;
+      font-size: 1.4rem;
     }
   }
 }

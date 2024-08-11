@@ -2,6 +2,8 @@ import Image from 'next/image';
 import styles from './page.module.scss';
 import dynamic from 'next/dynamic';
 import { Spin } from 'antd';
+import globalStyle from './layout.module.scss';
+import Title from 'antd/es/typography/Title';
 const Header = dynamic(() => import('./_components/header/header'), {
   loading: () => <Spin />,
   ssr: false,
@@ -11,9 +13,10 @@ export default function Home() {
     <>
       {' '}
       <Header />
-      <main className={styles.main}>
+      <main className={`${styles.main} ${globalStyle.container}`}>
         <div className={`${styles.content_container}`}>
           <h2>به سیستم پشتیبانی برج‌های شهرک چیتگر خوش‌آمدید.</h2>
+
           <ul>
             <li>
               این سیستم با هدف دریافت درخواست های پشتیبانی سرویس های فعال بر
