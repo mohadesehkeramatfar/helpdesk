@@ -1,0 +1,19 @@
+.my_ticket_container {
+  font-size: 1.4rem;
+  display: grid;
+  row-gap: 40px;
+}
+
+.statistics_container {
+  display: flex;
+  justify-content: space-around;
+  .statistic {
+    display: flex;
+    column-gap: 7px;
+    .tag {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
