@@ -1,0 +1,46 @@
+@import './variables.module.scss';
+
+:root {
+  font-family: var(--font-yekanx);
+  /* --font-yekanx: "IRANYekanXVFaNumVF", sans-serif; */
+  /* --mobile-width: 768px;
+  --tablet-width: 1024px;
+  --desktop-width: 1025px; */
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+html,
+body {
+  max-width: 100vw;
+  /* height: 100vh; */
+  overflow-x: hidden;
+  font-size: 62.5%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+textarea {
+  resize: none !important;
+}
+
+:hover.ant-btn-text {
+  background-color: transparent !important;
+}
+
+h2 {
+  @media screen and (max-width: $mobile-width) {
+    font-size: 1.4rem !important;
+  }
+  @media screen and (max-width: $tablet-width) {
+    font-size: 2.4rem !important;
+  }
+}
