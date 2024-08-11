@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  // border: 1px solid green;
+  width: 100%;
+  .div {
+    height: 30px;
+    position: fixed;
+    bottom: 10%;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .menu {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    .menu_item {
+      padding: 0;
+      text-align: center;
+      width: 25%;
+    }
+  }
+}
