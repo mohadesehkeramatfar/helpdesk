@@ -1,23 +1,37 @@
 .header_container {
   padding: 10px;
-  border: 1px solid #fff9f1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  .list_menu {
+  background-color: white;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 50px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  .header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    // border: 1px solid red;
-    column-gap: 20px;
-    li {
-      font-size: 16px;
+
+    .logo {
+      border: 1px solid green;
     }
-    .auth_container {
+    .list_menu {
       display: flex;
       align-items: center;
-      button {
+      // border: 1px solid red;
+      column-gap: 20px;
+      @media screen and (max-width: 700px) {
+        display: none;
+      }
+      li {
         font-size: 16px;
-        padding: 0;
+      }
+      .auth_container {
+        display: flex;
+        align-items: center;
+        button {
+          font-size: 16px;
+          padding: 0;
+        }
       }
     }
   }

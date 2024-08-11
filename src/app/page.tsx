@@ -14,10 +14,12 @@ export default function Home() {
       {' '}
       <Header />
       <main className={`${styles.main} ${globalStyle.container}`}>
-        <div className={`${styles.content_container}`}>
-          <h2>به سیستم پشتیبانی برج‌های شهرک چیتگر خوش‌آمدید.</h2>
+        <Title className={`${styles.title}`} level={2}>
+          سیستم پشتیبانی برج‌های شهرک چیتگر
+        </Title>
 
-          <ul>
+        <div className={`${styles.content_container}`}>
+          <ul className={`${styles.list_content}`}>
             <li>
               این سیستم با هدف دریافت درخواست های پشتیبانی سرویس های فعال بر
               بستر FTTH شامل IPTV، آیفون تصویری، اینترنت، تلفن و سیستم نظارت
@@ -40,13 +42,16 @@ export default function Home() {
               سایت مشاهده فرمائید.
             </li>
           </ul>
+          <div className={`${styles.img_container}`}>
+            <Image
+              width={600}
+              height={600}
+              alt="تی‌ویژه"
+              src={'/image/tower3.jpg'}
+              className={`${styles.img}`}
+            />
+          </div>
         </div>
-        <Image
-          width={600}
-          height={600}
-          src={'/image/tower3.jpg'}
-          className={`${styles.img}`}
-        />
       </main>
     </>
   );
