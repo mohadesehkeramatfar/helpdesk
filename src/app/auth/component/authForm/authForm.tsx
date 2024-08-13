@@ -2,15 +2,17 @@ import { Button, Form, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import style from './authForm.module.scss';
 import Image from 'next/image';
+import useResponsive from '@/lib/hook/useResponsive';
 
 const AuthForm = ({ children, formItems, finishFormHandler, loading }) => {
   const [formName] = Form.useForm();
+  const { isMobile } = useResponsive();
   return (
     <div className={`${style.form_container}`}>
       <Image
         src={'/logo/TV.png'}
-        width={90}
-        height={70}
+        width={isMobile ? 80 : 90}
+        height={isMobile ? 50 : 60}
         alt=""
         className={`${style.logo}`}
       />
