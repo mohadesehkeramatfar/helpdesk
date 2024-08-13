@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'http',
-        hostname: '172.16.203.57',
+        hostname: '172.16.203.64',
         port: '9000',
         pathname: '/avijeh-iptv-media-bucket/channels/icons/**',
       },
