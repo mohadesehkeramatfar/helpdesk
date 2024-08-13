@@ -1,5 +1,5 @@
 import style from './sendTicket.module.scss';
-import { Button, Form, Radio, Spin, Typography } from 'antd';
+import { Button, Form, Radio, Spin } from 'antd';
 import {
   useGetParentCategoriesList,
   useGetSubCategoriesList,
@@ -7,13 +7,18 @@ import {
   usePostUnitTicketSubmit,
 } from '../api/ticket';
 import { useGetUserInfo } from '@/app/auth/api/auth';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import Title from 'antd/es/typography/Title';
 import { RadioCard } from '@/app/_components/radio/radioCard';
 import TextArea from 'antd/es/input/TextArea';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+import { successfulTicketRegister } from '@/lib/alertMessage';
+import { ToastComponent } from '@/app/_components/toast/toast';
 const SendTicket = () => {
   const router = useRouter();
+  const refSubCategory = useRef(null);
+  const refDesc = useRef(null);
   const { data: getParentCategoriesList, isLoading: loadingGetParentCategory } =
     useGetParentCategoriesList();
   const {
@@ -44,10 +49,12 @@ const SendTicket = () => {
       id,
     });
     setSubCategoryList(subCategoriesListResponsed);
+    refSubCategory?.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const onChangeSubCategory = (id) => {
     setsubCategoryValue(id);
+    refDesc?.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const postTicketHandler = async (values: { message: string }) => {
@@ -70,7 +77,10 @@ const SendTicket = () => {
 
       try {
         await postUnitTicketPostSubmit({ data: ticketPostData });
-        router.push(`/my-ticket/${postUnitTicketSubmitResponse.id}`);
+        toast.success(successfulTicketRegister);
+        setTimeout(() => {
+          router.push(`/my-ticket/${postUnitTicketSubmitResponse.id}`);
+        }, 4000);
       } catch (error) {}
     } catch (error) {}
   };
@@ -93,19 +103,15 @@ const SendTicket = () => {
 
   return (
     <>
-      {' '}
+      <ToastComponent />
       <div className={`${style.send_ticket_container}`}>
         <Form
           layout="vertical"
           onFinish={postTicketHandler}
           className={`${style.form_container}`}
         >
-          {' '}
           <div className={`${style.question_section}`}>
-            {' '}
-            <Typography>
-              <Title level={4}>دسته یا دپارتمان</Title>
-            </Typography>
+            <Title level={4}>دسته یا دپارتمان</Title>
             <span className={`${style.text}`}>
               مشکل شما در مورد کدام دسته یا دپارتمان است؟{' '}
             </span>
@@ -113,7 +119,6 @@ const SendTicket = () => {
               value={parentCategoryValue}
               className={`${style.radio_container}`}
             >
-              {' '}
               {getParentCategoriesList?.data.map(
                 (
                   item: { name: string; id: string },
@@ -133,47 +138,47 @@ const SendTicket = () => {
               )}
             </Radio.Group>
           </div>
-          {subCategoryList.length > 0 &&
-            (isLoadingGetSubCategoryList ? (
-              <Spin />
-            ) : (
-              <div className={`${style.question_section}`}>
-                {' '}
-                <h2 className={`${style.title}`}></h2>
-                <Typography>
+          <div ref={refSubCategory}>
+            {subCategoryList.length > 0 &&
+              (isLoadingGetSubCategoryList ? (
+                <Spin />
+              ) : (
+                <div className={`${style.question_section}`}>
                   <Title level={4}>انتخاب بخش</Title>
-                </Typography>
-                <span className={`${style.text}`}>
-                  لطفا بخش مربوطه را انتخاب نمایید.
-                </span>
-                <Radio.Group
-                  value={subCategoryValue}
-                  className={`${style.radio_container}`}
-                >
-                  {' '}
-                  {subCategoryList.map(
-                    (
-                      item: { name: string; id: string },
-                      index: string | number,
-                    ) => {
-                      return (
-                        <RadioCard
-                          key={item.id}
-                          id={item.id}
-                          text={item.name}
-                          hasImage={false}
-                          selected={subCategoryValue === item.id}
-                          onSelect={onChangeSubCategory}
-                        />
-                      );
-                    },
-                  )}
-                </Radio.Group>
-              </div>
-            ))}
-          <Form.Item name="message" label="متن" required>
-            <TextArea rows={4} />
-          </Form.Item>
+
+                  <span className={`${style.text}`}>
+                    لطفا بخش مربوطه را انتخاب نمایید.
+                  </span>
+                  <Radio.Group
+                    value={subCategoryValue}
+                    className={`${style.radio_container}`}
+                  >
+                    {subCategoryList.map(
+                      (
+                        item: { name: string; id: string },
+                        index: string | number,
+                      ) => {
+                        return (
+                          <RadioCard
+                            key={item.id}
+                            id={item.id}
+                            text={item.name}
+                            hasImage={false}
+                            selected={subCategoryValue === item.id}
+                            onSelect={onChangeSubCategory}
+                          />
+                        );
+                      },
+                    )}
+                  </Radio.Group>
+                </div>
+              ))}
+          </div>
+          <div ref={refDesc}>
+            <Form.Item name="message" label="متن" required>
+              <TextArea rows={4} />
+            </Form.Item>
+          </div>
           <Form.Item className={`${style.form_item}`}>
             <Button
               className={`${style.btn}`}
