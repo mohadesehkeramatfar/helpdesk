@@ -3,7 +3,7 @@
 .main {
   display: flex;
   min-height: 100vh;
-  margin-top: 140px;
+  // margin-top: 160px;
   display: flex;
   flex-direction: column;
   row-gap: 25px;
@@ -16,11 +16,12 @@
     display: flex;
     flex-direction: column;
     font-size: 1.4rem;
-    row-gap: 30px;
-    line-height: 30px;
+    row-gap: 35px;
+    line-height: 40px;
 
     @media screen and (min-width: $desktop-width) {
       flex-direction: row;
+      column-gap: 30px;
     }
   }
   .list_content {
