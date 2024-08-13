@@ -1,19 +1,33 @@
+@import '@/app/variables.module.scss';
+
 .my_ticket_container {
   font-size: 1.4rem;
-  display: grid;
-  row-gap: 40px;
-}
-
-.statistics_container {
   display: flex;
-  justify-content: space-around;
-  .statistic {
+  flex-direction: column;
+  row-gap: 40px;
+
+  .statistics_container {
     display: flex;
-    column-gap: 7px;
-    .tag {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background-color: $gray-50;
+    padding: 10px;
+    width: 100%;
+    .statistic {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      gap: 7px;
+      @media screen and (max-width: $mobile-width) {
+        flex-direction: column;
+      }
+
+      .tag {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
+  }
+  .table_container {
+    width: 100%;
   }
 }
