@@ -8,9 +8,9 @@ const AuthForm = ({ children, formItems, finishFormHandler, loading }) => {
   return (
     <div className={`${style.form_container}`}>
       <Image
-        src={'/image/logo.webp'}
+        src={'/logo/TV.png'}
         width={90}
-        height={90}
+        height={70}
         alt=""
         className={`${style.logo}`}
       />

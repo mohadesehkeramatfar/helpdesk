@@ -9,7 +9,7 @@ import { extractDropDownItems, validateNumber } from '@/lib/utils';
 import { Input, Select, Spin } from 'antd';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { generalMessage, unitSuccessfullRegister } from '@/lib/alertMessage';
+import { generalMessage, successfulUnitRegister } from '@/lib/alertMessage';
 import { setRefreshToken, setToken } from '@/lib/token';
 import { setStorage } from '@/lib/storage';
 import { ToastComponent } from '@/app/_components/toast/toast';
@@ -58,7 +58,7 @@ const RegisterForm = () => {
       setStorage('user_name', userName);
 
       setRefreshToken(registerResponse.data.tokens.refresh);
-      toast.success(unitSuccessfullRegister);
+      toast.success(successfulUnitRegister);
       router.push('/send-ticket');
     } catch (error) {
       toast.error(generalMessage);

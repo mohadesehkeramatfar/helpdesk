@@ -1,12 +1,14 @@
+'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AuthForm from './authForm/authForm';
 import { useSubmitLogin } from '../api/auth';
 import { Input, Typography } from 'antd';
 import { validatePhoneNumber } from '@/lib/utils';
-import { toast } from 'react-toastify';
 import { ToastComponent } from '@/app/_components/toast/toast';
+import { toast } from 'react-toastify';
 import { generalMessage } from '@/lib/alertMessage';
-import Title from 'antd/es/typography/Title';
+
+const { Text, Title } = Typography;
 const Signin = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -31,6 +33,7 @@ const Signin = () => {
     const data = {
       phone,
     };
+
     try {
       const { data: submitLoginResponsed } = await submitLogin({ data });
       const params = {
@@ -65,19 +68,13 @@ const Signin = () => {
   return (
     <>
       <ToastComponent />
-
       <AuthForm
         formItems={formItem}
         loading={isLoadingSubmitLogin}
         finishFormHandler={loginHandler}
       >
-        <>
-          <Typography>
-            <Title level={4}>ثبت نام | ورود</Title>
-          </Typography>
-
-          <p>* لطفا شماره موبایل خود را وارد کنید</p>
-        </>
+        <Title level={4}>ثبت نام | ورود</Title>
+        <Text>* لطفا شماره موبایل خود را وارد کنید</Text>
       </AuthForm>
     </>
   );
