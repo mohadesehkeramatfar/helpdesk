@@ -13,6 +13,7 @@ const Signin = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sendTicket = searchParams.get('send-ticket');
+  const myTicket = searchParams.get('my-ticket');
   const { trigger: submitLogin, isMutating: isLoadingSubmitLogin } =
     useSubmitLogin();
 
@@ -42,6 +43,14 @@ const Signin = () => {
       };
       const queryString = new URLSearchParams(params).toString();
       if (!submitLoginResponsed.has_account) {
+        if (sendTicket) {
+          router.push(`signup?${queryString}&send-ticket=send-ticket`);
+          return;
+        }
+        if (myTicket) {
+          router.push(`signup?${queryString}&my-ticket=my-ticket`);
+          return;
+        }
         router.push(`signup?${queryString}`);
 
         return;
@@ -53,11 +62,23 @@ const Signin = () => {
             );
             return;
           }
+          if (myTicket) {
+            router.push(
+              `signin/password?phone=${submitLoginResponsed.phone}&my-ticket=my-ticket`,
+            );
+            return;
+          }
           router.push(`signin/password?phone=${submitLoginResponsed.phone}`);
           return;
-        }
-
-        if (submitLoginResponsed.method === 'otp') {
+        } else if (submitLoginResponsed.method === 'otp') {
+          if (sendTicket) {
+            router.push(`signin/otp/?${queryString}&send-ticket=send-ticket`);
+            return;
+          }
+          if (myTicket) {
+            router.push(`signin/otp/?${queryString}&my-ticket=my-ticket`);
+            return;
+          }
           router.push(`signin/otp/?${queryString}`);
         }
       }

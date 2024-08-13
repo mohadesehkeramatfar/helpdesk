@@ -1,3 +1,6 @@
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { getCookies } from './cookies';
+
 export const extractDropDownItems = (response: any[]) => {
   return response.map((item) => ({
     label: item.name,
@@ -21,4 +24,14 @@ export const validateNumber = (_: any, value: string) => {
     return Promise.reject(new Error('مقدار فقط شامل اعداد باشد'));
   }
   return Promise.resolve();
+};
+
+export const handleRouter = (
+  router: AppRouterInstance | string[],
+  searchParams: string,
+) => {
+  const accessTokenValue = getCookies('access');
+  if (!accessTokenValue) {
+    router.push(`/auth/signin/?${searchParams}=${searchParams}`);
+  } else router.push(`/${searchParams}`);
 };

@@ -13,11 +13,14 @@ import { setRefreshToken, setToken } from '@/lib/token';
 import { ToastComponent } from '@/app/_components/toast/toast';
 import { useEffect, useRef, useState } from 'react';
 import { setStorage } from '@/lib/storage';
+import { myTicketPageRoute, sendTicketPageRoute } from '@/lib/services/routes';
 
 const OtpSignin = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const phone = searchParams.get('phone');
+  const sendTicket = searchParams.get('send-ticket');
+  const myTicket = searchParams.get('my-ticket');
   const authentication_ref_id = searchParams.get('authentication_ref_id');
   const { trigger: postValidateOTP, isMutating: isLoadingPostValidateOtp } =
     usePostValidateOtp();
@@ -42,7 +45,15 @@ const OtpSignin = () => {
       const responsedLogin = await postValidateOTP({ data });
       setToken(responsedLogin.data.access);
       setRefreshToken(responsedLogin.data.refresh);
-      router.push('/send-ticket');
+      if (sendTicket) {
+        router.push(sendTicketPageRoute);
+        return;
+      }
+      if (myTicket) {
+        router.push(myTicketPageRoute);
+        return;
+      }
+      router.push('/');
     } catch (error) {
       toast.error(error.response.data);
     }

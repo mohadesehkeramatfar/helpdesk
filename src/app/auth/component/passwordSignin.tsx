@@ -7,17 +7,20 @@ import { toast } from 'react-toastify';
 import { generalMessage, wrongPassword } from '@/lib/alertMessage';
 import { setRefreshToken, setToken } from '@/lib/token';
 import { setStorage } from '@/lib/storage';
+import { myTicketPageRoute, sendTicketPageRoute } from '@/lib/services/routes';
 
 const PasswordSignin = () => {
   const router = useRouter();
+
   const searchParams = useSearchParams();
   const { trigger: postUnitLogin } = usePostUnitLogin();
   const { trigger: getUserInfo } = useGetUserInfo();
   const phone = searchParams.get('phone');
   const sendTicket = searchParams.get('send-ticket');
+  const myTicket = searchParams.get('my-ticket');
+
   const passwordHandler = async (values: { password: string }) => {
     const { password } = values;
-
     try {
       const data = {
         password,
@@ -29,7 +32,9 @@ const PasswordSignin = () => {
       setRefreshToken(tokens.refresh);
 
       if (sendTicket) {
-        router.push('/send-ticket');
+        router.push(sendTicketPageRoute);
+      } else if (myTicket) {
+        router.push(myTicketPageRoute);
       } else {
         router.push('/');
       }

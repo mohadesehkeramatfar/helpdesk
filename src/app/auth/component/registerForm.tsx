@@ -13,11 +13,14 @@ import { generalMessage, successfulUnitRegister } from '@/lib/alertMessage';
 import { setRefreshToken, setToken } from '@/lib/token';
 import { setStorage } from '@/lib/storage';
 import { ToastComponent } from '@/app/_components/toast/toast';
+import { myTicketPageRoute, sendTicketPageRoute } from '@/lib/services/routes';
 
 const RegisterForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const phone = searchParams.get('phone');
+  const sendTicket = searchParams.get('send-ticket');
+  const myTicket = searchParams.get('my-ticket');
   const { trigger: postUnitRegister, isMutating: isLoadingPostUnitRegister } =
     usePostUnitRegister();
   const { data: getBuildingList, isLoading: loadingGetBuildingList } =
@@ -59,7 +62,15 @@ const RegisterForm = () => {
 
       setRefreshToken(registerResponse.data.tokens.refresh);
       toast.success(successfulUnitRegister);
-      router.push('/send-ticket');
+      if (sendTicket) {
+        router.push(sendTicketPageRoute);
+        return;
+      }
+      if (myTicket) {
+        router.push(myTicketPageRoute);
+        return;
+      }
+      router.push('/');
     } catch (error) {
       toast.error(generalMessage);
     }

@@ -12,6 +12,9 @@ const OtpSignup = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const phone = searchParams.get('phone');
+
+  const sendTicket = searchParams.get('send-ticket');
+  const myTicket = searchParams.get('my-ticket');
   const authentication_ref_id = searchParams.get('authentication_ref_id');
   const { trigger: postValidateOTP, isMutating: isLoadingPostValidateOtp } =
     usePostValidateOtp();
@@ -43,9 +46,23 @@ const OtpSignup = () => {
         authentication_ref_id,
       };
       await postValidateOTP({ data });
+      if (sendTicket) {
+        router.push(
+          `signup/register-from/?phone=${phone}&authentication_ref_id=${authentication_ref_id}&send-ticket=send-ticket`,
+        );
+        return;
+      }
+      if (myTicket) {
+        router.push(
+          `signup/register-from/?phone=${phone}&authentication_ref_id=${authentication_ref_id}&my-ticket=my-ticket`,
+        );
+        return;
+      }
+
       router.push(
         `signup/register-from/?phone=${phone}&authentication_ref_id=${authentication_ref_id}`,
       );
+      return;
     } catch (error) {
       toast.error(error.response.data);
     }

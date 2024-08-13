@@ -17,6 +17,7 @@ import {
 import { LuUser } from 'react-icons/lu';
 import { LiaSignInAltSolid, LiaSignOutAltSolid } from 'react-icons/lia';
 import { useEffect, useState } from 'react';
+import { handleRouter } from '@/lib/utils';
 
 const Header = () => {
   const router = useRouter();
@@ -33,10 +34,11 @@ const Header = () => {
   };
   const handleSendTicket = (e) => {
     e.preventDefault();
-    const accessTokenValue = getCookies('access');
-    if (!accessTokenValue) {
-      router.push(`/auth/signin/?send-ticket=send-ticket`);
-    } else router.push(`/send-ticket`);
+    handleRouter(router, 'send-ticket');
+  };
+  const handleMyTicket = (e) => {
+    e.preventDefault();
+    handleRouter(router, 'my-ticket');
   };
 
   useEffect(() => {
@@ -70,7 +72,9 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link href={myTicketPageRoute}>تیکت های من</Link>
+              <Link href={myTicketPageRoute} onClick={handleMyTicket}>
+                تیکت های من
+              </Link>
             </li>
           </ul>
         )}
