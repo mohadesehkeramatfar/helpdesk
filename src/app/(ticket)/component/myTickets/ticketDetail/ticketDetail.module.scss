@@ -1,0 +1,98 @@
+@import '@/app/variables.module.scss';
+.ticket_detail_container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 40px;
+  max-width: 800px;
+  .message_form {
+    .form_item_message {
+      display: grid;
+
+      .btn {
+        justify-self: flex-end;
+      }
+    }
+  }
+}
+
+.title_container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  // border: 1px solid green;
+  // @media screen and (max-width: $mobile-width) {
+  //   flex-direction: column;
+  // }
+  .title_detail_container {
+    display: flex;
+    column-gap: 15px;
+    @media screen and (max-width: $mobile-width) {
+      flex-direction: column;
+      row-gap: 10px;
+    }
+  }
+}
+.timeline {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  // padding-left: 20px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 23px;
+  width: 1px;
+  background-color: $gray_400;
+}
+.timeline_item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 50px;
+  position: relative;
+  .content_card {
+    .header_card {
+      padding: 15px 10px;
+      display: flex;
+      column-gap: 15px;
+
+      svg {
+        padding-bottom: 5px;
+      }
+      .info_date {
+        align-self: self-end;
+      }
+    }
+    .comment_card {
+      padding: 15px 40px;
+    }
+  }
+}
+.timeline_item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline_icon {
+  background-color: #fff;
+  border: 1px solid $gray_400;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline_content {
+  width: 100% !important;
+  padding: 4px 10px;
+}
+
+.body_card {
+  padding: 0 !important;
+}

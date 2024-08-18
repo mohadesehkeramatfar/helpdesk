@@ -35,7 +35,7 @@ const MyTickets = () => {
   });
   const statisticData = [
     {
-      color: '#9e9e9e',
+      color: '#f6a22a',
       icon: <AiOutlineRise size={isMobile ? 20 : 40} />,
       title: 'کل',
       value: 0,
@@ -88,16 +88,14 @@ const MyTickets = () => {
     },
     {
       title: 'تاریخ ثبت',
-      dataIndex: 'categories',
-      key: 'categories',
-      render: (categories: { updated_at: string }[]) => {
+      dataIndex: 'created_at',
+      key: 'created_at',
+      render: (created_at: string) => {
         return (
-          <Space direction="vertical">
+          <Space direction="vertical" align="center">
             {' '}
-            <Text>
-              {moment(categories[1]?.updated_at).format('jYYYY/jM/jD') + '?'}
-            </Text>
-            <Text type="secondary">ساعت</Text>
+            <Text>{moment(created_at).format('jYYYY/jM/jD')}</Text>
+            <Text type="secondary">{moment(created_at).format('HH:MM')}</Text>
           </Space>
         );
       },
@@ -106,7 +104,9 @@ const MyTickets = () => {
       title: 'وضعیت',
       dataIndex: 'status',
       key: 'status',
-      render: () => <Tag color="success">success</Tag>,
+      render: (status: { title: string; color: string }) => (
+        <Tag color={status.color}>{status?.title}</Tag>
+      ),
     },
     {
       title: 'جزئیات',
@@ -168,6 +168,7 @@ const MyTickets = () => {
           pagination={ticketListPagination}
           onChange={handlePagination}
           rowClassName={() => globalStyle.customRowHeight}
+          style={{ cursor: 'pointer' }}
           scroll={{ x: 'max-content' }}
         />
       </div>
