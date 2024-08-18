@@ -1,3 +1,4 @@
+'use client';
 import style from './sendTicket.module.scss';
 import { Button, Form, Radio, Spin } from 'antd';
 import {
