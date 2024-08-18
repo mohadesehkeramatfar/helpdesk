@@ -34,8 +34,6 @@ const TicketDetail = () => {
         id,
       });
       setunitTicketDetail(unitTicketDetailResponsed);
-      console.log('unitTicketDetailResponsed', unitTicketDetailResponsed);
-
       const { data: ticketTimelineResponsed } = await getTicketTimeline(id);
       setTimelineList(
         ticketTimelineResponsed.map((item: { timeline: any }) => item.timeline),
@@ -45,6 +43,7 @@ const TicketDetail = () => {
 
   const handlePostTicket = async (values: { message: string }) => {
     const { message } = values;
+    if (!message) return;
     const ticketPostData = {
       message,
       ticket: id,
