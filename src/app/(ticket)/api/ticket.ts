@@ -38,9 +38,25 @@ export const useGetUnitTicketList = () => {
   );
 };
 
-export const useTicketDetail = () => {
+export const useUnitTicketDetail = () => {
   return useSWRMutation(
     API_ENDPOINTS.GET_UNIT_TICKET_Detail,
     async (url, { arg }) => await request(`${url}${arg.id}`, 'GET', {}, true),
   );
 };
+export const useTicketPostList = () => {
+  return useSWRMutation(
+    API_ENDPOINTS.GET_UNIT_TICKET_POST_LIST,
+    async (url, { arg }) => await request(`${url}${arg.id}`, 'GET', {}, true),
+  );
+};
+// GET_UNIT_TICKET_POST_LIST
+// /ticket/unit_ticket_ticket_posts_list/{id}/
+
+export const useGetTicketTimeline = () => {
+  return useSWRMutation(
+    API_ENDPOINTS.GET_TICKET_TIMELINE,
+    async (url, { arg }) => await request(`${url}${arg}`, 'GET', {}, true),
+  );
+};
+//
