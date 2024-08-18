@@ -92,11 +92,13 @@ const MyTickets = () => {
       dataIndex: 'created_at',
       key: 'created_at',
       render: (created_at: string) => {
+        console.log('created_at', created_at);
+        // e1737de5-70d4-42ff-8182-589a3ab3db76
         return (
           <Space direction="vertical" align="center">
             {' '}
             <Text>{moment(created_at).format('jYYYY/jM/jD')}</Text>
-            <Text type="secondary">{moment(created_at).format('HH:MM')}</Text>
+            <Text type="secondary">{moment(created_at).format('HH:mm')}</Text>
           </Space>
         );
       },
