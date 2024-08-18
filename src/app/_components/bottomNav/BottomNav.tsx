@@ -7,12 +7,8 @@ import { VscSend } from 'react-icons/vsc';
 import style from './bottomNav.module.scss';
 import { IoListOutline } from 'react-icons/io5';
 import { usePathname, useRouter } from 'next/navigation';
-import {
-  contactUsPageRoute,
-  homePageRoute,
-  myTicketPageRoute,
-  sendTicketPageRoute,
-} from '@/lib/services/routes';
+import { contactUsPageRoute, homePageRoute } from '@/lib/services/routes';
+import { handleRouter } from '@/lib/utils';
 
 const BottomNav = () => {
   const { isDesktop } = useResponsive();
@@ -31,10 +27,10 @@ const BottomNav = () => {
       },
     },
     {
-      key: 'send_ticket',
+      key: 'send-ticket',
       title: 'ارسال تیکت',
       icon: <VscSend size={22} />,
-      onclick: () => router.push(sendTicketPageRoute),
+      onclick: () => handleRouter(router, 'send-ticket'),
       style: {
         display: 'flex',
         flexDirection: 'column',
@@ -42,10 +38,10 @@ const BottomNav = () => {
       },
     },
     {
-      key: 'myTicket',
+      key: 'my-ticket',
       title: 'تیکت‌های من',
       icon: <IoListOutline size={22} />,
-      onclick: () => router.push(myTicketPageRoute),
+      onclick: () => handleRouter(router, 'my-ticket'),
       style: {
         display: 'flex',
         flexDirection: 'column',

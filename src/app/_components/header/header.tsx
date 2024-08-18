@@ -2,7 +2,7 @@
 import { Button, Spin } from 'antd';
 import style from './header.module.scss';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getCookies, removeCookies } from '@/lib/cookies';
 import { getStorage, removeStorage } from '@/lib/storage';
@@ -21,9 +21,12 @@ import { handleRouter } from '@/lib/utils';
 
 const Header = () => {
   const router = useRouter();
+  const path = usePathname();
+
   const [loading, setLoading] = useState(true);
   const { isDesktop, isMobile } = useResponsive();
   const [userInfo, setUserInfo] = useState('');
+
   const logoutHandler = () => {
     removeStorage('user_id');
     removeStorage('user_name');
@@ -40,7 +43,32 @@ const Header = () => {
     e.preventDefault();
     handleRouter(router, 'my-ticket');
   };
-
+  const listMenu = [
+    {
+      id: 0,
+      title: 'صفحه اصلی',
+      href: homePageRoute,
+      onclick: null,
+    },
+    {
+      id: 1,
+      title: 'تماس با ما',
+      href: contactUsPageRoute,
+      onclick: null,
+    },
+    {
+      id: 2,
+      title: 'ارسال تیکت',
+      href: sendTicketPageRoute,
+      onclick: handleSendTicket,
+    },
+    {
+      id: 3,
+      title: 'تیکت‌های من',
+      href: myTicketPageRoute,
+      onclick: handleMyTicket,
+    },
+  ];
   useEffect(() => {
     if (loading) {
       setUserInfo(getStorage('user_name' ?? ''));
@@ -60,22 +88,19 @@ const Header = () => {
         />
         {isDesktop && (
           <ul className={`${style.list_menu}`}>
-            <li>
-              <Link href={homePageRoute}>صفحه اصلی</Link>
-            </li>
-            <li>
-              <Link href={contactUsPageRoute}>تماس با ما</Link>
-            </li>
-            <li>
-              <Link href={sendTicketPageRoute} onClick={handleSendTicket}>
-                ارسال تیکت
-              </Link>
-            </li>
-            <li>
-              <Link href={myTicketPageRoute} onClick={handleMyTicket}>
-                تیکت های من
-              </Link>
-            </li>
+            {listMenu.map((item, index) => {
+              let activeTab = false;
+
+              if (path === item.href) activeTab = true;
+
+              return (
+                <li data-active={activeTab} key={index}>
+                  <Link href={item.href} onClick={item.onclick}>
+                    {item.title}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         )}
 

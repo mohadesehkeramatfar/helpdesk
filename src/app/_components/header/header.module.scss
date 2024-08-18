@@ -1,3 +1,4 @@
+@import '@/app/variables.module.scss';
 .header_container {
   padding: 10px;
   background-color: white;
@@ -24,6 +25,9 @@
       }
       li {
         font-size: 16px;
+        &[data-active='true'] {
+          color: $secondary;
+        }
       }
     }
     .auth_container {
