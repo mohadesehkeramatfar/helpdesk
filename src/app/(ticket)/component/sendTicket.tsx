@@ -15,8 +15,10 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { successfulTicketRegister } from '@/lib/alertMessage';
 import { ToastComponent } from '@/app/_components/toast/toast';
+import { useForm } from 'antd/es/form/Form';
 const SendTicket = () => {
   const router = useRouter();
+  const [ticketForm] = useForm();
   const refSubCategory = useRef(null);
   const refDesc = useRef(null);
   const { data: getParentCategoriesList, isLoading: loadingGetParentCategory } =
@@ -34,8 +36,8 @@ const SendTicket = () => {
   } = usePostUnitTicketPostSubmit();
   const [isPending, startTransition] = useTransition();
   const [parentCategoryValue, setParentCategoryValue] = useState('');
-  const [subCategoryList, setSubCategoryList] = useState([]);
   const [subCategoryValue, setsubCategoryValue] = useState('');
+  const [subCategoryList, setSubCategoryList] = useState([]);
   const [userInfo, setUserInfo] = useState({});
 
   const fetchUserInfo = async () => {
@@ -44,10 +46,13 @@ const SendTicket = () => {
   };
   const onChangeCategoryList = async (id) => {
     setParentCategoryValue(id);
-    setsubCategoryValue(id);
+    setsubCategoryValue('');
+    console.log('subCategoryValue', !subCategoryValue ? 'false' : 'true');
+
     const { data: subCategoriesListResponsed } = await getSubCategoriesList({
       id,
     });
+
     setSubCategoryList(subCategoriesListResponsed);
     refSubCategory?.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -62,13 +67,14 @@ const SendTicket = () => {
     const ticketData = {
       unit: userInfo.id,
       categories: [parentCategoryValue, subCategoryValue],
+      status: '55c66a81-91fc-4d4c-85c9-00328aacc2eb',
     };
 
+    // ! اینجا باگ درست کن اگه یکیش اررور خورد هیچ کاری نکمه promiseAll or inseprable try catch
     try {
       const { data: postUnitTicketSubmitResponse } = await postUnitTicketSubmit(
         { data: ticketData },
       );
-
       const ticketPostData = {
         message,
         ticket: postUnitTicketSubmitResponse.id,
@@ -106,6 +112,7 @@ const SendTicket = () => {
       <ToastComponent />
       <div className={`${style.send_ticket_container}`}>
         <Form
+          form={ticketForm}
           layout="vertical"
           onFinish={postTicketHandler}
           className={`${style.form_container}`}
@@ -175,19 +182,51 @@ const SendTicket = () => {
               ))}
           </div>
           <div ref={refDesc}>
-            <Form.Item name="message" label="متن" required>
+            <Form.Item
+              rules={[
+                { required: true, message: 'لطفا این قسمت را خالی نگذارید' },
+              ]}
+              name="message"
+              label="متن"
+              // required
+            >
               <TextArea rows={4} />
             </Form.Item>
           </div>
-          <Form.Item className={`${style.form_item}`}>
-            <Button
+          <Form.Item className={`${style.form_item}`} shouldUpdate>
+            {() => {
+              const hasTouchedFields = ticketForm.isFieldsTouched();
+              const hasErrors =
+                ticketForm
+                  .getFieldsError()
+                  .filter(({ errors }) => errors.length).length > 0;
+
+              return (
+                <Button
+                  className={`${style.btn}`}
+                  type="primary"
+                  htmlType="submit"
+                  loading={postUnitTicketLoading}
+                  disabled={
+                    !parentCategoryValue ||
+                    !subCategoryValue ||
+                    !hasTouchedFields ||
+                    hasErrors
+                  }
+                >
+                  ارسال تیکت
+                </Button>
+              );
+            }}
+            {/* <Button
               className={`${style.btn}`}
               type="primary"
               htmlType="submit"
               loading={postUnitTicketLoading}
+              disabled={!parentCategoryValue || !subCategoryValue}
             >
               ارسال تیکت
-            </Button>
+            </Button> */}
           </Form.Item>
         </Form>
       </div>
