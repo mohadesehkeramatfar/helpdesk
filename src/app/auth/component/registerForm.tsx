@@ -6,7 +6,7 @@ import {
 import { usePostUnitRegister } from '../api/auth';
 import AuthForm from './authForm/authForm';
 import { extractDropDownItems, validateNumber } from '@/lib/utils';
-import { Input, Select, Spin } from 'antd';
+import { Input, Select, Spin, Typography } from 'antd';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ToastComponent } from '@/app/_components/toast/toast';
 import { useState } from 'react';
@@ -15,7 +15,7 @@ import { setRefreshToken, setToken } from '@/lib/token';
 import { getStorage, removeStorage, setStorage } from '@/lib/storage';
 import { generalMessage, successfulUnitRegister } from '@/lib/alertMessage';
 import { myTicketPageRoute, sendTicketPageRoute } from '@/lib/services/routes';
-
+const { Title } = Typography;
 const RegisterForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -169,8 +169,10 @@ const RegisterForm = () => {
         formItems={formItems}
         finishFormHandler={registerHandler}
         loading={isLoadingPostUnitRegister}
-        children={undefined}
-      />
+      >
+        {' '}
+        <Title level={4}>اطلاعات را وارد کنید</Title>
+      </AuthForm>
     </>
   );
 };

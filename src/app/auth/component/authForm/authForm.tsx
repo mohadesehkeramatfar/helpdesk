@@ -33,6 +33,12 @@ const AuthForm = ({ children, formItems, finishFormHandler, loading }) => {
                   name={field.name}
                   label={field.label}
                   rules={field.rules}
+                  // style={{field.showReRequestBtn &&  marginBottom: '0' }}
+                  style={
+                    field.showReRequestBtn
+                      ? { marginBottom: '5px' }
+                      : { marginBottom: '15px' }
+                  }
                 >
                   {field.component === Select ? (
                     <Select
@@ -40,7 +46,11 @@ const AuthForm = ({ children, formItems, finishFormHandler, loading }) => {
                       onChange={field?.onChangeSelect}
                     />
                   ) : (
-                    <field.component disabled={field.disabled} />
+                    <field.component
+                      data-test={field.showReRequestBtn}
+                      disabled={field.disabled}
+                      style={field.style}
+                    />
                   )}
                 </FormItem>
                 {field.showReRequestBtn &&

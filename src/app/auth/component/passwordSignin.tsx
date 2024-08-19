@@ -58,7 +58,7 @@ const PasswordSignin = () => {
   const formItems = [
     {
       name: 'password',
-      label: 'رمز عبور',
+      label: 'لطفا رمز عبور را وارد کنید',
       component: Input.Password,
       ref: refPassword,
       rules: [{ required: true, message: 'رمز را وارد کنید' }],
@@ -72,10 +72,7 @@ const PasswordSignin = () => {
         loading={undefined}
         formItems={formItems}
         finishFormHandler={passwordHandler}
-      >
-        {' '}
-        <p>* لطفا رمز عبور را وارد کنید</p>
-      </AuthForm>
+      ></AuthForm>
     </>
   );
 };

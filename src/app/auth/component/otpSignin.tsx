@@ -54,16 +54,18 @@ const OtpSignin = () => {
         return;
       }
       router.push('/');
+      try {
+        const { data: getUserInfoResponsed } = await getUserInfo();
+        const userName =
+          getUserInfoResponsed.first_name +
+          ' ' +
+          getUserInfoResponsed.last_name;
+        setStorage('user_name', userName);
+      } catch (error) {
+        toast.error(generalMessage);
+      }
     } catch (error) {
       toast.error(error.response.data);
-    }
-    try {
-      const { data: getUserInfoResponsed } = await getUserInfo();
-      const userName =
-        getUserInfoResponsed.first_name + ' ' + getUserInfoResponsed.last_name;
-      setStorage('user_name', userName);
-    } catch (error) {
-      toast.error(generalMessage);
     }
   };
   const reOtpHandler = async () => {
@@ -103,10 +105,11 @@ const OtpSignin = () => {
   const formItems = [
     {
       name: 'otp',
-      label: 'کد OTP',
+      label: 'لطفا کد OTP وارد کنید',
       component: Input,
       disabled: otpDisable,
       showReRequestBtn: true,
+      style: { textAlign: 'center' },
       children: [
         {
           component: Button,
@@ -129,10 +132,7 @@ const OtpSignin = () => {
         formItems={formItems}
         finishFormHandler={otpHandler}
         loading={isLoadingPostValidateOtp}
-      >
-        {' '}
-        <p>* لطفا کد وارد کنید</p>
-      </AuthForm>
+      ></AuthForm>
     </>
   );
 };

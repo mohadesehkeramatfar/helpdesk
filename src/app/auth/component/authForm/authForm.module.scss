@@ -3,8 +3,11 @@
   flex-direction: column;
   row-gap: 25px;
   min-height: 300px;
+  // border: 1px solid gray;
   padding-bottom: 20px;
-
+  label {
+    font-size: 1.3rem !important;
+  }
   .logo {
     // justify-self: center;
     align-self: center;
@@ -21,7 +24,7 @@
   .form {
     display: flex;
     flex-direction: column;
-    row-gap: 15px;
+    row-gap: 23px;
 
     .field_form_container {
       button {

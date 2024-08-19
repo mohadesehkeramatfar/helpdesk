@@ -8,7 +8,7 @@ import { ToastComponent } from '@/app/_components/toast/toast';
 import { toast } from 'react-toastify';
 import { generalMessage } from '@/lib/alertMessage';
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 const Signin = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -20,10 +20,10 @@ const Signin = () => {
   const formItem = [
     {
       name: 'phone',
-      label: 'شماره تلفن',
+      label: 'لطفا شماره موبایل خود را وارد کنید',
       component: Input,
       rules: [
-        { required: true, message: 'شماره تلفن را وارد کنید' },
+        { required: true, message: 'شماره موبایل را وارد کنید' },
         { validator: validatePhoneNumber },
       ],
     },
@@ -95,7 +95,6 @@ const Signin = () => {
         finishFormHandler={loginHandler}
       >
         <Title level={4}>ثبت نام | ورود</Title>
-        <Text>* لطفا شماره موبایل خود را وارد کنید</Text>
       </AuthForm>
     </>
   );

@@ -73,10 +73,11 @@ const OtpSignup = () => {
   const formItems = [
     {
       name: 'otp',
-      label: 'کد OTP',
+      label: 'لطفا کد OTP وارد کنید',
       component: Input,
       disabled: otpDisable,
       showReRequestBtn: true,
+      style: { textAlign: 'center' },
       children: [
         {
           component: Button,
@@ -118,9 +119,7 @@ const OtpSignup = () => {
         formItems={formItems}
         finishFormHandler={otpHandler}
         loading={isLoadingPostValidateOtp}
-      >
-        <p>* لطفا کد وارد کنید</p>
-      </AuthForm>
+      />
     </>
   );
 };
