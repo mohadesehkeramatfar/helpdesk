@@ -92,8 +92,6 @@ const MyTickets = () => {
       dataIndex: 'created_at',
       key: 'created_at',
       render: (created_at: string) => {
-        console.log('created_at', created_at);
-        // e1737de5-70d4-42ff-8182-589a3ab3db76
         return (
           <Space direction="vertical" align="center">
             {' '}
@@ -180,10 +178,3 @@ const MyTickets = () => {
 };
 
 export default MyTickets;
-// </div>
-// <div key={index} className={`${style.statistic}`}>
-//   {/* <Tag color={item.color} className={style.tag}> */}
-//   {isMobile ? null : item.icon}
-//   {/* </Tag> */}
-//   <Statistic title={item.title} value={item.value} />
-// </div>
