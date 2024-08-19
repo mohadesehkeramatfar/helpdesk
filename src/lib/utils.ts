@@ -12,7 +12,7 @@ export const validatePhoneNumber = (_: any, value: string) => {
   const phoneNumberRegex = /^[0-9]{11}$/;
   if (value && !phoneNumberRegex.test(value)) {
     return Promise.reject(
-      new Error('شماره تلفن باید 11 رقم و فقط شامل اعداد باشد'),
+      new Error('شماره موبایل باید 11 رقم و فقط شامل اعداد باشد'),
     );
   }
   return Promise.resolve();
