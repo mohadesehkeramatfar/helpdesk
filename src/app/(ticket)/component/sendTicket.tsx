@@ -14,7 +14,7 @@ import { RadioCard } from '@/app/_components/radio/radioCard';
 import TextArea from 'antd/es/input/TextArea';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { successfulTicketRegister } from '@/lib/alertMessage';
+import { generalMessage, successfulTicketRegister } from '@/lib/alertMessage';
 import { ToastComponent } from '@/app/_components/toast/toast';
 import { useForm } from 'antd/es/form/Form';
 const SendTicket = () => {
@@ -48,7 +48,6 @@ const SendTicket = () => {
   const onChangeCategoryList = async (id) => {
     setParentCategoryValue(id);
     setsubCategoryValue('');
-    console.log('subCategoryValue', !subCategoryValue ? 'false' : 'true');
 
     const { data: subCategoriesListResponsed } = await getSubCategoriesList({
       id,
@@ -71,7 +70,6 @@ const SendTicket = () => {
       status: '55c66a81-91fc-4d4c-85c9-00328aacc2eb',
     };
 
-    // ! اینجا باگ درست کن اگه یکیش اررور خورد هیچ کاری نکمه promiseAll or inseprable try catch
     try {
       const { data: postUnitTicketSubmitResponse } = await postUnitTicketSubmit(
         { data: ticketData },
@@ -82,14 +80,14 @@ const SendTicket = () => {
         media: '',
       };
 
-      try {
-        await postUnitTicketPostSubmit({ data: ticketPostData });
-        toast.success(successfulTicketRegister);
-        setTimeout(() => {
-          router.push(`/my-ticket/${postUnitTicketSubmitResponse.id}`);
-        }, 4000);
-      } catch (error) {}
-    } catch (error) {}
+      await postUnitTicketPostSubmit({ data: ticketPostData });
+      toast.success(successfulTicketRegister);
+      setTimeout(() => {
+        router.push(`/my-ticket/${postUnitTicketSubmitResponse.id}`);
+      }, 4000);
+    } catch (error) {
+      toast.error(generalMessage);
+    }
   };
   useEffect(() => {
     fetchUserInfo();
@@ -98,15 +96,6 @@ const SendTicket = () => {
   if (isLoadingGetUserInfo || loadingGetParentCategory) {
     return <Spin />;
   }
-
-  const imageUrls = [
-    '/icon/fiberOptic.png',
-    '/icon/telephone.png',
-    '/icon/wifi.png',
-    '/icon/intercomePanel1.png',
-    '/icon/iptv.jpg',
-    '/icon/iptv.jpg',
-  ];
 
   return (
     <>
@@ -129,7 +118,11 @@ const SendTicket = () => {
             >
               {getParentCategoriesList?.data.map(
                 (
-                  item: { name: string; id: string },
+                  item: {
+                    icon: string;
+                    name: string;
+                    id: string;
+                  },
                   index: string | number,
                 ) => {
                   return (
@@ -137,7 +130,7 @@ const SendTicket = () => {
                       key={item.id}
                       id={item.id}
                       text={item.name}
-                      image={imageUrls[index]}
+                      image={item?.icon ?? '/image/notFound.png'}
                       selected={parentCategoryValue === item.id}
                       onSelect={onChangeCategoryList}
                     />
