@@ -35,11 +35,11 @@ const Header = () => {
     router.push('/');
     setLoading(true);
   };
-  const handleSendTicket = (e) => {
+  const handleSendTicket = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     handleRouter(router, 'send-ticket');
   };
-  const handleMyTicket = (e) => {
+  const handleMyTicket = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     handleRouter(router, 'my-ticket');
   };
@@ -90,8 +90,10 @@ const Header = () => {
           <ul className={`${style.list_menu}`}>
             {listMenu.map((item, index) => {
               let activeTab = false;
-
-              if (path === item.href) activeTab = true;
+              if (item.href === '/' && path === '/') {
+                activeTab = true;
+              } else if (item.href !== '/' && path.startsWith(item.href))
+                activeTab = true;
 
               return (
                 <li data-active={activeTab} key={index}>

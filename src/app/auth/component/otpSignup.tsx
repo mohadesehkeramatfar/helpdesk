@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { generalMessage } from '@/lib/alertMessage';
 import { ToastComponent } from '@/app/_components/toast/toast';
+import { setStorage } from '@/lib/storage';
 
 const OtpSignup = () => {
   const router = useRouter();
@@ -46,6 +47,8 @@ const OtpSignup = () => {
         authentication_ref_id,
       };
       await postValidateOTP({ data });
+
+      setStorage('otp_code', otp);
       if (sendTicket) {
         router.push(
           `signup/register-from/?phone=${phone}&authentication_ref_id=${authentication_ref_id}&send-ticket=send-ticket`,

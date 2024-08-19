@@ -96,7 +96,7 @@ const MyTickets = () => {
           <Space direction="vertical" align="center">
             {' '}
             <Text>{moment(created_at).format('jYYYY/jM/jD')}</Text>
-            <Text type="secondary">{moment(created_at).format('HH:MM')}</Text>
+            <Text type="secondary">{moment(created_at).format('HH:mm')}</Text>
           </Space>
         );
       },
@@ -178,10 +178,3 @@ const MyTickets = () => {
 };
 
 export default MyTickets;
-// </div>
-// <div key={index} className={`${style.statistic}`}>
-//   {/* <Tag color={item.color} className={style.tag}> */}
-//   {isMobile ? null : item.icon}
-//   {/* </Tag> */}
-//   <Statistic title={item.title} value={item.value} />
-// </div>

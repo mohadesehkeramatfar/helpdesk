@@ -35,7 +35,10 @@ const AuthForm = ({ children, formItems, finishFormHandler, loading }) => {
                   rules={field.rules}
                 >
                   {field.component === Select ? (
-                    <Select options={field.options} />
+                    <Select
+                      options={field.options}
+                      onChange={field?.onChangeSelect}
+                    />
                   ) : (
                     <field.component disabled={field.disabled} />
                   )}

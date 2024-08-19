@@ -4,7 +4,7 @@ export const API_ENDPOINTS = {
   POST_VALIDATE_OTP: '/users/validate_otp/',
   GET_SEND_OTP: '/users/send_otp/',
   POST_UNIT_LOGIN: '/users/unit_login/',
-  POST_UNIT_REGISTER: '/users/unit_register/',
+  POST_UNIT_REGISTER: '/users/submit_registration/',
   GET_BUILDINGS_LIST: '/users/buildings_list/',
   GET_FACING_SIDE: '/users/facing_sides_list/',
   WHO_AM_I: '/users/whoami/',

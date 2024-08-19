@@ -8,11 +8,12 @@ import AuthForm from './authForm/authForm';
 import { extractDropDownItems, validateNumber } from '@/lib/utils';
 import { Input, Select, Spin } from 'antd';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'react-toastify';
-import { generalMessage, successfulUnitRegister } from '@/lib/alertMessage';
-import { setRefreshToken, setToken } from '@/lib/token';
-import { setStorage } from '@/lib/storage';
 import { ToastComponent } from '@/app/_components/toast/toast';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { setRefreshToken, setToken } from '@/lib/token';
+import { getStorage, removeStorage, setStorage } from '@/lib/storage';
+import { generalMessage, successfulUnitRegister } from '@/lib/alertMessage';
 import { myTicketPageRoute, sendTicketPageRoute } from '@/lib/services/routes';
 
 const RegisterForm = () => {
@@ -21,13 +22,14 @@ const RegisterForm = () => {
   const phone = searchParams.get('phone');
   const sendTicket = searchParams.get('send-ticket');
   const myTicket = searchParams.get('my-ticket');
+  const authentication_ref_id = searchParams.get('authentication_ref_id');
   const { trigger: postUnitRegister, isMutating: isLoadingPostUnitRegister } =
     usePostUnitRegister();
   const { data: getBuildingList, isLoading: loadingGetBuildingList } =
     useGetBuildingsList();
   const { data: getFacingSideList, isLoading: loadingGetFacingSideList } =
     useGetFacingSideList();
-
+  const [facingSideList, setFacingSideList] = useState([]);
   const registerHandler = async (values: {
     first_name: string;
     last_name: string;
@@ -35,17 +37,29 @@ const RegisterForm = () => {
     building: string;
     password: string;
     confirmPassword: string;
+    facing_side: string;
   }) => {
-    const { first_name, last_name, unit_number, building, password } = values;
-
+    const {
+      first_name,
+      last_name,
+      unit_number,
+      building,
+      facing_side,
+      password,
+    } = values;
+    const otp_code = getStorage('otp_code');
     const data = {
       first_name,
       last_name,
       phone,
       unit_number,
       building,
-      password: password || undefined,
+      facing_side,
+      password: password || null,
+      authentication_ref_id: authentication_ref_id,
+      otp_code,
     };
+
     if (Number(unit_number) > 32000) {
       toast.error('شماره واحد نباید بزرگتر از 32,000 باشد');
       return;
@@ -62,6 +76,7 @@ const RegisterForm = () => {
 
       setRefreshToken(registerResponse.data.tokens.refresh);
       toast.success(successfulUnitRegister);
+      removeStorage('otp_code');
       if (sendTicket) {
         router.push(sendTicketPageRoute);
         return;
@@ -79,12 +94,17 @@ const RegisterForm = () => {
   if (loadingGetBuildingList || loadingGetFacingSideList) {
     return <Spin />;
   }
+  const handleBuildingList = (e) => {
+    const buildingListFiltered = getBuildingList?.data.filter(
+      (item) => item.id === e,
+    );
+    setFacingSideList(buildingListFiltered[0].facing_sides);
+  };
 
   const formItems = [
     {
       name: 'first_name',
       label: 'نام',
-
       component: Input,
       rules: [{ required: true, message: 'نام را وارد کنید' }],
     },
@@ -94,7 +114,22 @@ const RegisterForm = () => {
       component: Input,
       rules: [{ required: true, message: 'نام خانوادگی را وارد کنید' }],
     },
-
+    {
+      name: 'building',
+      label: 'ساختمان',
+      rules: [{ required: true, message: 'ساختمان را وارد کنید' }],
+      component: Select,
+      options: extractDropDownItems(getBuildingList?.data),
+      onChangeSelect: handleBuildingList,
+    },
+    {
+      name: 'facing_side',
+      label: 'جهت واحد',
+      component: Select,
+      options: extractDropDownItems(facingSideList),
+      // options: facingSideList,
+      // onChangeSelect: handleFacingList,
+    },
     {
       name: 'unit_number',
       label: 'شماره واحد',
@@ -104,19 +139,7 @@ const RegisterForm = () => {
         { validator: validateNumber },
       ],
     },
-    {
-      name: 'facing_side',
-      label: 'جهت واحد',
-      component: Select,
-      options: extractDropDownItems(getFacingSideList?.data),
-    },
-    {
-      name: 'building',
-      label: 'ساختمان',
-      rules: [{ required: true, message: 'ساختمان را وارد کنید' }],
-      component: Select,
-      options: extractDropDownItems(getBuildingList?.data),
-    },
+
     {
       name: 'password',
       label: 'رمز عبور',
