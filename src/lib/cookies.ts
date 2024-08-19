@@ -13,7 +13,7 @@ export const setCookies = (
   expires: number = 0,
   sameSite: 'Lax' | 'Strict' | 'None' = 'Lax',
   path: string = '/',
-  domain: string = 'localhost',
+  domain: string = '172.16.203.64',
 ): void => {
   if (name.length * value.length === 0)
     throw new Error('Invalid name or value for cookie');
@@ -28,7 +28,7 @@ export const setCookies = (
 export const removeCookies = (
   name: string,
   path: string = '/',
-  domain: string = 'localhost',
+  domain: string = '172.16.203.64',
 ) => {
   document.cookie = `${name}=; Max-Age=-1; path=${path}; Domain=${domain}`;
 };
