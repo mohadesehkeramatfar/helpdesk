@@ -1,8 +1,9 @@
 .form_container {
   display: flex;
   flex-direction: column;
-  row-gap: 40px;
-  min-height: 400px;
+  row-gap: 25px;
+  min-height: 300px;
+  padding-bottom: 20px;
 
   .logo {
     // justify-self: center;
