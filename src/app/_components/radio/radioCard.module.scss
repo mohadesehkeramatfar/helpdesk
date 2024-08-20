@@ -5,7 +5,7 @@
   flex-direction: row;
   justify-content: space-between;
   column-gap: 15px;
-  border: 1px solid $primary;
+  border: 1px solid $gray-300;
   // width: 280px;
   max-width: max-content;
   border-radius: 7px;
@@ -23,6 +23,7 @@
 
 .rectangle.selected {
   background-color: #f0f0f0;
+  border: 1px solid $primary;
 }
 
 .leftSide {
