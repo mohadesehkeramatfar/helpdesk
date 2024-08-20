@@ -18,5 +18,8 @@
 
     display: grid;
     row-gap: 30px;
+    @media screen and (max-width: $mobile-width) {
+      width: 100%;
+    }
   }
 }
