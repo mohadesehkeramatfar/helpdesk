@@ -4,15 +4,26 @@
   font-size: 1.4rem;
   display: flex;
   flex-direction: column;
-  row-gap: 40px;
-
+  .title_container {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @media screen and (max-width: $mobile-width) {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: start;
+      row-gap: 15px;
+    }
+  }
   .statistics_container {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    background-color: $gray-50;
-    padding: 10px;
-    width: 100%;
+    column-gap: 100px;
+    @media screen and (max-width: $mobile-width) {
+      width: 100%;
+      justify-content: space-between;
+      column-gap: 0;
+    }
     .statistic {
       display: flex;
       gap: 7px;
@@ -29,5 +40,6 @@
   }
   .table_container {
     width: 100%;
+    // border: 1px solid green;
   }
 }

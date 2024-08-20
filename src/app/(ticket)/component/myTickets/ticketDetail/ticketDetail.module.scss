@@ -2,9 +2,12 @@
 .ticket_detail_container {
   display: flex;
   flex-direction: column;
-  row-gap: 40px;
+  row-gap: 30px;
   max-width: 800px;
   .message_form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
     .form_item_message {
       display: grid;
 
@@ -18,11 +21,8 @@
 .title_container {
   display: flex;
   flex-direction: column;
-  row-gap: 20px;
-  // border: 1px solid green;
-  // @media screen and (max-width: $mobile-width) {
-  //   flex-direction: column;
-  // }
+  row-gap: 10px;
+
   .title_detail_container {
     display: flex;
     column-gap: 15px;
@@ -50,19 +50,26 @@
 .timeline_item {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 50px;
+  margin-bottom: 18px;
   position: relative;
   .content_card {
     .header_card {
-      padding: 15px 10px;
+      padding: 5px 10px;
       display: flex;
+      align-items: center;
       column-gap: 15px;
-
-      svg {
-        padding-bottom: 5px;
+      @media screen and (max-width: $mobile-width) {
+        justify-content: space-between;
       }
-      .info_date {
-        align-self: self-end;
+      .user_info {
+        display: flex;
+        align-items: center;
+        column-gap: 10px;
+
+        white-space: nowrap;
+      }
+      .date_info {
+        display: flex;
       }
     }
     .comment_card {
@@ -91,6 +98,7 @@
 .timeline_content {
   width: 100% !important;
   padding: 4px 10px;
+  // border: 1px solid green;
 }
 
 .body_card {

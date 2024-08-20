@@ -1,9 +1,8 @@
 'use client';
 import {
   Button,
-  Card,
   Divider,
-  Space,
+  Flex,
   Spin,
   Statistic,
   Table,
@@ -13,16 +12,15 @@ import {
 import moment from 'moment-jalaali';
 import { useGetUnitTicketList } from '../../api/ticket';
 import style from './myTicket.module.scss';
-import globalStyle from '../../../layout.module.scss';
+import globalStyle from '@/app/layout.module.scss';
 import { useState } from 'react';
-import { TbListDetails } from 'react-icons/tb';
 import { useRouter } from 'next/navigation';
 import { AiOutlineRise } from 'react-icons/ai';
 import { IoCheckmarkOutline } from 'react-icons/io5';
-import Title from 'antd/es/typography/Title';
 import { PiArrowsCounterClockwiseThin } from 'react-icons/pi';
 import useResponsive from '@/lib/hook/useResponsive';
-const { Text } = Typography;
+import { CgDetailsMore } from 'react-icons/cg';
+const { Text, Title } = Typography;
 
 const MyTickets = () => {
   const router = useRouter();
@@ -79,11 +77,11 @@ const MyTickets = () => {
         }[],
       ) => {
         return (
-          <Space direction="vertical">
+          <Flex vertical gap={'5px'}>
             {' '}
             <Text>{categories[0]?.parent?.name}</Text>
             <Text type="secondary">{categories[0]?.name}</Text>
-          </Space>
+          </Flex>
         );
       },
     },
@@ -93,11 +91,11 @@ const MyTickets = () => {
       key: 'created_at',
       render: (created_at: string) => {
         return (
-          <Space direction="vertical" align="center">
+          <Flex vertical>
             {' '}
             <Text>{moment(created_at).format('jYYYY/jM/jD')}</Text>
             <Text type="secondary">{moment(created_at).format('HH:mm')}</Text>
-          </Space>
+          </Flex>
         );
       },
     },
@@ -118,8 +116,10 @@ const MyTickets = () => {
           <>
             <Button
               type="text"
+              style={{ padding: 0 }}
               icon={
-                <TbListDetails
+                <CgDetailsMore
+                  size={20}
                   onClick={() => router.push(`/my-ticket/${record.id}`)}
                 />
               }
@@ -133,34 +133,31 @@ const MyTickets = () => {
 
   return (
     <div className={`${style.my_ticket_container}`}>
+      {/* TITLE CONTAINER */}
       <div className={`${style.title_container}`}>
         <Title level={4}>تیکت‌های من</Title>
-        <Divider style={{ paddingBottom: 0, marginBottom: 0 }} />
-      </div>
-      <div className={`${style.statistics_container}`}>
-        {statisticData.map((item, index) => (
-          // <div key={index} className={`${style.statistic}`}>
-          <Card key={index} bordered={false}>
+        <div className={`${style.statistics_container}`}>
+          {statisticData.map((item, index) => (
             <Statistic
+              key={index}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
               }}
-              title={
-                <span style={{ color: item.color, fontWeight: 700 }}>
-                  {item.title}
-                </span>
-              }
-              value={item.value}
+              title={<Text>{item.title}</Text>}
+              value={150}
+              // {item.value}
               valueStyle={{ color: item.color }}
-              // prefix={item.icon}
             />
-          </Card>
-        ))}
+          ))}
+        </div>
       </div>
+      <Divider style={{ paddingBottom: 0, marginBottom: 0 }} />
+      {/* TABLE CONTAINER */}
       <div className={`${style.table_container}`}>
         <Table
+          rowClassName={() => globalStyle.customRowHeight}
           onRow={(record) => ({
             onClick: () => router.push(`/my-ticket/${record.id}`),
           })}
@@ -168,7 +165,6 @@ const MyTickets = () => {
           columns={unitTicketListColumns}
           pagination={ticketListPagination}
           onChange={handlePagination}
-          rowClassName={() => globalStyle.customRowHeight}
           style={{ cursor: 'pointer' }}
           scroll={{ x: 'max-content' }}
         />

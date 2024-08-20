@@ -13,10 +13,12 @@ import TextArea from 'antd/es/input/TextArea';
 import { toast } from 'react-toastify';
 import { successfulTicketRegister } from '@/lib/alertMessage';
 import { BiMessageRoundedDots } from 'react-icons/bi';
+import useResponsive from '@/lib/hook/useResponsive';
 
 const { Text, Title } = Typography;
 const TicketDetail = () => {
   const { id } = useParams();
+  const { isMobile } = useResponsive();
   const { trigger: getTicketTimeline, isMutating: getTicketTimelineLoading } =
     useGetTicketTimeline();
   const { trigger: getUnitTicketDetail } = useUnitTicketDetail();
@@ -70,7 +72,7 @@ const TicketDetail = () => {
     history_date: string;
     author: {};
   }) => {
-    const { type, status, history_date, author } = item;
+    const { type, status, history_date, author, history_user } = item;
     switch (type) {
       case 'Ticket':
         return (
@@ -78,40 +80,69 @@ const TicketDetail = () => {
             <div className={`${style.timeline_icon}`}>
               <GoTag size={17} strokeWidth={1.5} color="#757575" />
             </div>
-            <div className={`${style.timeline_content}`}>
+
+            <Flex
+              {...(isMobile ? { vertical: true } : { vertical: false })}
+              gap={'5px'}
+              style={{ padding: ' 4px 10px' }}
+            >
               <Flex gap={'10px'}>
+                <Text type="secondary">تغییر وضعیت</Text>
                 <Tag color={status?.color}>{status?.title}</Tag>
-                <Text type="secondary">
-                  {moment(history_date).format('jYYYY/jM/jD ساعت HH:mm')}
-                </Text>
               </Flex>
-            </div>
+              <Flex gap={'10px'}>
+                <Text type="secondary">
+                  توسط {history_user.first_name}
+                  {` `}
+                  {history_user.last_name}
+                </Text>
+                <Divider
+                  type="vertical"
+                  style={{ height: '25px', border: '1px solid #eeeeee' }}
+                />
+                <div>
+                  <Text type="secondary">
+                    {moment(history_date).format('jYYYY/jM/jD')}
+                  </Text>
+                  <Text type="secondary">---</Text>
+                  <Text type="secondary">
+                    {moment(history_date).format('HH:mm')}
+                  </Text>
+                </div>
+              </Flex>
+            </Flex>
           </div>
+          // </div>
         );
       case 'TicketPost':
         return (
           <div className={`${style.timeline_item}`}>
             <Card
-              style={{ padding: 0 }}
+              style={{ padding: 0, border: '1px solid #eee' }}
               styles={{ body: { padding: '0' } }}
               className={`${style.timeline_content}`}
             >
               <div className={`${style.content_card}`}>
                 <div className={`${style.header_card}`}>
-                  <div>
-                    {' '}
-                    <BiMessageRoundedDots color="#757575" size={30} />
+                  <div className={`${style.user_info}`}>
+                    <BiMessageRoundedDots color="#757575" size={26} />
                     <Text style={{ fontWeight: 600 }}>
-                      {' '}
                       توسط {author?.first_name} {` `} {author?.last_name}
-                      {` `}
                     </Text>
                   </div>
-                  <div className={`${style.info_date}`}>
-                    {' '}
+                  <Divider
+                    type="vertical"
+                    style={{ height: '25px', border: '1px solid #eeeeee' }}
+                  />
+                  <div className={`${style.date_info}`}>
                     <Text type="secondary">
                       {'   '}
-                      {moment(history_date).format('jYYYY/jM/jD ساعت HH:mm')}
+                      {moment(history_date).format('jYYYY/jM/jD ')}
+                    </Text>
+                    <Text type="secondary">---</Text>
+                    <Text type="secondary">
+                      {'   '}
+                      {moment(history_date).format('HH:mm')}
                     </Text>
                   </div>
                 </div>
@@ -132,10 +163,11 @@ const TicketDetail = () => {
   const { categories, unit, status, created_at } = unitTicketDetail;
   return (
     <div className={`${style.ticket_detail_container}`}>
+      {/* TITLE CONTAINER */}
       <div className={`${style.title_container}`}>
-        <Title level={4}>{categories[0].name}</Title>
+        <Title level={4}>{categories[1].name}</Title>
         <Title type="secondary" level={5}>
-          ایراد {categories[1].name}
+          ایراد {categories[0].name}
         </Title>
         <div className={`${style.title_detail_container}`}>
           <Tag style={{ maxWidth: 'max-content' }} color={status?.color}>
@@ -151,18 +183,25 @@ const TicketDetail = () => {
             {moment(created_at).format('jYYYY/jM/jD ساعت HH:mm')}
           </Text>
         </div>
+        <Divider style={{ margin: 0, padding: 0 }} />
       </div>
-      <Divider style={{ margin: 0, padding: 0 }} />
+
       <div className={`${style.timeline}`}>
-        {timelineList.map((item) => renderedTimeline(item))}
+        {timelineList.map((item, index) => {
+          if (index === 0) return;
+          return renderedTimeline(item);
+        })}
+        <Divider style={{ margin: 0, padding: 0 }} />
       </div>
+
       <Form
         layout="vertical"
         onFinish={handlePostTicket}
         className={`${style.message_form}`}
       >
-        <Form.Item label="متن پیام" name={'message'}>
-          <TextArea rows={5} placeholder="متن پیام را وارد کنید" />
+        <Title level={4}>ارسال پاسخ</Title>
+        <Form.Item label="پاسخ" name={'message'}>
+          <TextArea rows={5} placeholder="پاسخ خود را وارد کنید" />
         </Form.Item>
         <Form.Item>
           <div className={`${style.form_item_message}`}>
@@ -172,7 +211,7 @@ const TicketDetail = () => {
               loading={postUnitTicketLoading}
               htmlType="submit"
             >
-              ارسال پیام
+              ارسال پاسخ
             </Button>
           </div>
         </Form.Item>

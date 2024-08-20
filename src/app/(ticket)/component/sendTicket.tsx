@@ -1,6 +1,6 @@
 'use client';
 import style from './sendTicket.module.scss';
-import { Button, Form, Radio, Spin } from 'antd';
+import { Button, Divider, Form, Radio, Spin } from 'antd';
 import {
   useGetParentCategoriesList,
   useGetSubCategoriesList,
@@ -8,7 +8,7 @@ import {
   usePostUnitTicketSubmit,
 } from '../api/ticket';
 import { useGetUserInfo } from '@/app/auth/api/auth';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Title from 'antd/es/typography/Title';
 import { RadioCard } from '@/app/_components/radio/radioCard';
 import TextArea from 'antd/es/input/TextArea';
@@ -35,7 +35,6 @@ const SendTicket = () => {
     trigger: postUnitTicketPostSubmit,
     isMutating: postUnitTicketLoading,
   } = usePostUnitTicketPostSubmit();
-  const [isPending, startTransition] = useTransition();
   const [parentCategoryValue, setParentCategoryValue] = useState('');
   const [subCategoryValue, setsubCategoryValue] = useState('');
   const [subCategoryList, setSubCategoryList] = useState([]);
@@ -82,6 +81,7 @@ const SendTicket = () => {
 
       await postUnitTicketPostSubmit({ data: ticketPostData });
       toast.success(successfulTicketRegister);
+      ticketForm.resetFields();
       setTimeout(() => {
         router.push(`/my-ticket/${postUnitTicketSubmitResponse.id}`);
       }, 4000);
@@ -101,6 +101,10 @@ const SendTicket = () => {
     <>
       <ToastComponent />
       <div className={`${style.send_ticket_container}`}>
+        <div className={`${style.title_container}`}>
+          <Title level={4}>ارسال تیکت</Title>
+          <Divider style={{ paddingBottom: 0, marginBottom: 0 }} />
+        </div>
         <Form
           form={ticketForm}
           layout="vertical"
@@ -175,13 +179,14 @@ const SendTicket = () => {
                 </div>
               ))}
           </div>
-          <div ref={refDesc}>
+          <div className={`${style.question_section}`} ref={refDesc}>
+            <Title level={4}>توضیحات</Title>
             <Form.Item
               rules={[
                 { required: true, message: 'لطفا این قسمت را خالی نگذارید' },
               ]}
               name="message"
-              label="متن"
+              label="شرح مشکل"
               // required
             >
               <TextArea rows={4} />
@@ -212,15 +217,6 @@ const SendTicket = () => {
                 </Button>
               );
             }}
-            {/* <Button
-              className={`${style.btn}`}
-              type="primary"
-              htmlType="submit"
-              loading={postUnitTicketLoading}
-              disabled={!parentCategoryValue || !subCategoryValue}
-            >
-              ارسال تیکت
-            </Button> */}
           </Form.Item>
         </Form>
       </div>
