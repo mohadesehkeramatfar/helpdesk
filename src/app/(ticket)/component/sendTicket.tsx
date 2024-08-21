@@ -1,6 +1,6 @@
 'use client';
 import style from './sendTicket.module.scss';
-import { Button, Divider, Form, Radio, Spin } from 'antd';
+import { Button, Divider, Form, Modal, Radio, Spin, Typography } from 'antd';
 import {
   useGetParentCategoriesList,
   useGetSubCategoriesList,
@@ -9,7 +9,7 @@ import {
 } from '../api/ticket';
 import { useGetUserInfo } from '@/app/auth/api/auth';
 import { useEffect, useRef, useState } from 'react';
-import Title from 'antd/es/typography/Title';
+
 import { RadioCard } from '@/app/_components/radio/radioCard';
 import TextArea from 'antd/es/input/TextArea';
 import { useRouter } from 'next/navigation';
@@ -17,6 +17,11 @@ import { toast } from 'react-toastify';
 import { generalMessage, successfulTicketRegister } from '@/lib/alertMessage';
 import { ToastComponent } from '@/app/_components/toast/toast';
 import { useForm } from 'antd/es/form/Form';
+import { MdAttachFile, MdOutlineKeyboardVoice } from 'react-icons/md';
+import { SlMicrophone } from 'react-icons/sl';
+import { IoStopSharp } from 'react-icons/io5';
+import { AiOutlineDelete } from 'react-icons/ai';
+const { Text, Title } = Typography;
 const SendTicket = () => {
   const router = useRouter();
   const [ticketForm] = useForm();
@@ -39,6 +44,12 @@ const SendTicket = () => {
   const [subCategoryValue, setsubCategoryValue] = useState('');
   const [subCategoryList, setSubCategoryList] = useState([]);
   const [userInfo, setUserInfo] = useState({});
+  const [recording, setRecording] = useState(false);
+  const [audioURLModal, setAudioURLModal] = useState('');
+  const [audioURL, setAudioURL] = useState('');
+  const mediaRecorderRef = useRef(null);
+  const audioChunks = useRef([]);
+  const [showRecordModal, setShowRecordModal] = useState(false);
 
   const fetchUserInfo = async () => {
     const { data: userInfo } = await getUserInfo();
@@ -88,6 +99,35 @@ const SendTicket = () => {
     } catch (error) {
       toast.error(generalMessage);
     }
+  };
+
+  const startRecording = () => {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunks.current.push(event.data);
+      };
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunks.current);
+        const audioUrl = URL.createObjectURL(audioBlob);
+        setAudioURLModal(audioUrl);
+        audioChunks.current = [];
+      };
+      mediaRecorderRef.current.start();
+      setRecording(true);
+    });
+  };
+  const stopRecording = () => {
+    mediaRecorderRef.current.stop();
+    setRecording(false);
+  };
+  const handleSendRecord = () => {
+    setShowRecordModal(false);
+    setAudioURL(audioURLModal);
+  };
+  const handleCancelRecord = () => {
+    setShowRecordModal(false);
+    setAudioURLModal('');
   };
   useEffect(() => {
     fetchUserInfo();
@@ -181,17 +221,50 @@ const SendTicket = () => {
           </div>
           <div className={`${style.question_section}`} ref={refDesc}>
             <Title level={4}>توضیحات</Title>
-            <Form.Item
-              rules={[
-                { required: true, message: 'لطفا این قسمت را خالی نگذارید' },
-              ]}
-              name="message"
-              label="شرح مشکل"
-              // required
-            >
-              <TextArea rows={4} />
-            </Form.Item>
+            <div className={`${style.content}`}>
+              <Form.Item
+                rules={[
+                  { required: true, message: 'لطفا این قسمت را خالی نگذارید' },
+                ]}
+                name="message"
+                label="شرح مشکل"
+                // required
+              >
+                <TextArea rows={4} />
+              </Form.Item>
+              <div className={`${style.attachment_contatiner}`}>
+                <div className={`${style.record_container}`}>
+                  <Button
+                    onClick={() => {
+                      setShowRecordModal(!showRecordModal);
+                      setAudioURLModal('');
+                      setRecording(false);
+                    }}
+                    icon={<MdOutlineKeyboardVoice size={23} />}
+                  >
+                    ارسال تیکت صوتی
+                  </Button>
+                  {audioURL && (
+                    <div className={`${style.file_container}`}>
+                      <audio
+                        src={audioURL}
+                        controls
+                        className={`${style.audio}`}
+                      />
+                      <AiOutlineDelete size={20} color="#ff0033" />
+                    </div>
+                  )}
+                </div>
+                <Button
+                  className={`${style.btn_attachment}`}
+                  icon={<MdAttachFile size={23} />}
+                >
+                  افزودن ضمیمه
+                </Button>
+              </div>
+            </div>
           </div>
+
           <Form.Item className={`${style.form_item}`} shouldUpdate>
             {() => {
               const hasTouchedFields = ticketForm.isFieldsTouched();
@@ -220,8 +293,55 @@ const SendTicket = () => {
           </Form.Item>
         </Form>
       </div>
+      {showRecordModal && (
+        <Modal
+          open={showRecordModal}
+          title="ضبط صدا"
+          footer={[
+            <Button key="cancel" onClick={handleCancelRecord}>
+              انصراف
+            </Button>,
+            audioURLModal && (
+              <Button key="ok" type="primary" onClick={handleSendRecord}>
+                تایید
+              </Button>
+            ),
+          ]}
+        >
+          <div className={`${style.content_modal}`}>
+            <Text>برای ضبط صدای خود روی دکمه زیر کلیک کنید</Text>
+            <Button
+              className={`${style.btn_record}`}
+              type="text"
+              onClick={recording ? stopRecording : startRecording}
+              icon={
+                recording ? (
+                  <IoStopSharp color="#ff0033" size={50} />
+                ) : (
+                  <SlMicrophone color="#0098a9" size={50} />
+                )
+              }
+            ></Button>
+            {audioURLModal && (
+              <audio
+                className={`${style.audio}`}
+                src={audioURLModal}
+                controls
+              />
+            )}
+          </div>
+        </Modal>
+      )}
     </>
   );
 };
 
 export default SendTicket;
+{
+  /* <Form.Item>
+                <Button onClick={recording ? stopRecording : startRecording}>
+                  {recording ? 'Stop Recording' : 'Start Recording'}
+                </Button>
+                {audioURLModal && <audio src={audioURLModal} controls />}
+              </Form.Item> */
+}
