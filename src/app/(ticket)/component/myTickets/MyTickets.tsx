@@ -10,14 +10,14 @@ import {
   Typography,
 } from 'antd';
 import moment from 'moment-jalaali';
-import { useGetUnitTicketList } from '../../api/ticket';
+import {
+  useGetTicketStatusTagReport,
+  useGetUnitTicketList,
+} from '../../api/ticket';
 import style from './myTicket.module.scss';
 import globalStyle from '@/app/layout.module.scss';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AiOutlineRise } from 'react-icons/ai';
-import { IoCheckmarkOutline } from 'react-icons/io5';
-import { PiArrowsCounterClockwiseThin } from 'react-icons/pi';
 import useResponsive from '@/lib/hook/useResponsive';
 import { CgDetailsMore } from 'react-icons/cg';
 const { Text, Title } = Typography;
@@ -26,43 +26,26 @@ const MyTickets = () => {
   const router = useRouter();
   const { data: getUnitTicketList, isLoading: getUnitTicketListLoading } =
     useGetUnitTicketList();
+  const {
+    data: getTicketStatusTagReport,
+    isLoading: ticketStatusTagReportLoading,
+  } = useGetTicketStatusTagReport();
   const { isMobile } = useResponsive();
   const [ticketListPagination, setTicketListPagination] = useState({
     total: 0,
     current: 1,
     pageSize: 50,
   });
-  const statisticData = [
-    {
-      color: '#f6a22a',
-      icon: <AiOutlineRise size={isMobile ? 20 : 40} />,
-      title: 'کل',
-      value: 0,
-    },
-    {
-      color: '#009bff',
-      icon: (
-        <PiArrowsCounterClockwiseThin
-          size={isMobile ? 20 : 40}
-          color="#1677ff"
-        />
-      ),
-      title: 'در حال بررسی',
-      value: 0,
-    },
-    {
-      color: '#5cb85c',
-      icon: <IoCheckmarkOutline size={isMobile ? 20 : 40} />,
-      title: 'بسته',
-      value: 0,
-    },
-  ];
   const handlePagination = (page: { current: number }) => {
     const { current } = page;
     setTicketListPagination({ ...ticketListPagination, current });
   };
 
-  if (getUnitTicketListLoading || !getUnitTicketList) {
+  if (
+    getUnitTicketListLoading ||
+    !getUnitTicketList ||
+    ticketStatusTagReportLoading
+  ) {
     return <Spin />;
   }
   const unitTicketListColumns = [
@@ -130,6 +113,7 @@ const MyTickets = () => {
     },
   ];
   const unitTicketList = getUnitTicketList.data.results;
+  const { data: resultOfgetTicketStatusTagReport } = getTicketStatusTagReport;
 
   return (
     <div className={`${style.my_ticket_container}`}>
@@ -137,20 +121,21 @@ const MyTickets = () => {
       <div className={`${style.title_container}`}>
         <Title level={4}>تیکت‌های من</Title>
         <div className={`${style.statistics_container}`}>
-          {statisticData.map((item, index) => (
-            <Statistic
-              key={index}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-              title={<Text>{item.title}</Text>}
-              value={150}
-              // {item.value}
-              valueStyle={{ color: item.color }}
-            />
-          ))}
+          {resultOfgetTicketStatusTagReport.map(
+            (item: { title: string; id: string }) => (
+              <Statistic
+                key={item.id}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+                title={<Text>{item.title}</Text>}
+                value={item.ticket_count}
+                // valueStyle={{ color: item.color }}
+              />
+            ),
+          )}
         </div>
       </div>
       <Divider style={{ paddingBottom: 0, marginBottom: 0 }} />

@@ -59,4 +59,9 @@ export const useGetTicketTimeline = () => {
     async (url, { arg }) => await request(`${url}${arg}`, 'GET', {}, true),
   );
 };
-//
+export const useGetTicketStatusTagReport = () => {
+  return useSWR(
+    API_ENDPOINTS.GET_TICKET_STATUS_TAG_REPORT,
+    async (url) => await request(url, 'GET', {}, true),
+  );
+};
