@@ -122,7 +122,12 @@ const MyTickets = () => {
         <Title level={4}>تیکت‌های من</Title>
         <div className={`${style.statistics_container}`}>
           {resultOfgetTicketStatusTagReport.map(
-            (item: { title: string; id: string }) => (
+            (item: {
+              color: string | undefined;
+              ticket_count: number;
+              title: string;
+              id: string;
+            }) => (
               <Statistic
                 key={item.id}
                 style={{
@@ -130,9 +135,13 @@ const MyTickets = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                 }}
-                title={<Text>{item.title}</Text>}
+                title={
+                  <Text datatype={item.title} className={`${style.title}`}>
+                    {item.title}
+                  </Text>
+                }
                 value={item.ticket_count}
-                // valueStyle={{ color: item.color }}
+                valueStyle={{ color: item.color }}
               />
             ),
           )}
