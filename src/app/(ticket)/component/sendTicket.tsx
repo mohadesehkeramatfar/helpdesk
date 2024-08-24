@@ -251,7 +251,12 @@ const SendTicket = () => {
                         controls
                         className={`${style.audio}`}
                       />
-                      <AiOutlineDelete size={20} color="#ff0033" />
+                      <Button
+                        type="text"
+                        onClick={() => setAudioURL('')}
+                        icon={<AiOutlineDelete size={20} color="#ff0033" />}
+                      ></Button>
+                      {/*  */}
                     </div>
                   )}
                 </div>
