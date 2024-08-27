@@ -19,5 +19,8 @@ export const API_ENDPOINTS = {
   GET_UNIT_TICKET_Detail: '/ticket/unit_ticket_detail/',
   GET_UNIT_TICKET_POST_LIST: '/ticket/unit_ticket_ticket_posts_list/',
   GET_TICKET_TIMELINE: '/ticket/ticket_timeline/',
-  //
+  DELETE_TICKET: '/ticket/ticket_delete/',
+  DELETE_POST_TICKET: '/ticket/ticket_post_delete/',
+  // * IMAGE FILE
+  PATCH_TICKET_POST_ASSET_ADD: '/ticket/ticket_post_asset_add/',
 };

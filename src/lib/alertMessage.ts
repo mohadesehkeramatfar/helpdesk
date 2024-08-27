@@ -5,3 +5,6 @@ export const successfulUnitRegister = 'ثبت نام شما با موفقیت ا
 export const wrongPassword = 'رمز وارد شده اشتباه میباشد';
 
 export const successfulTicketRegister = 'تیکت با موفقیت ثبت شد';
+
+export const failedUpload =
+  'آپلود فایل به درستی انجام نشد، با پشتیبانی نماس بگیرید';
