@@ -1,9 +1,21 @@
 'use client';
 import style from './sendTicket.module.scss';
-import { Button, Divider, Form, Modal, Radio, Spin, Typography } from 'antd';
 import {
+  Button,
+  Divider,
+  Form,
+  Modal,
+  Radio,
+  Spin,
+  Typography,
+  Upload,
+} from 'antd';
+import {
+  useDeletePostTicket,
+  useDeleteTicket,
   useGetParentCategoriesList,
   useGetSubCategoriesList,
+  usePatchTicketPostAdd,
   usePostUnitTicketPostSubmit,
   usePostUnitTicketSubmit,
 } from '../api/ticket';
@@ -14,13 +26,13 @@ import { RadioCard } from '@/app/_components/radio/radioCard';
 import TextArea from 'antd/es/input/TextArea';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { generalMessage, successfulTicketRegister } from '@/lib/alertMessage';
 import { ToastComponent } from '@/app/_components/toast/toast';
 import { useForm } from 'antd/es/form/Form';
 import { MdAttachFile, MdOutlineKeyboardVoice } from 'react-icons/md';
 import { SlMicrophone } from 'react-icons/sl';
 import { IoStopSharp } from 'react-icons/io5';
 import { AiOutlineDelete } from 'react-icons/ai';
+import { failedUpload, successfulTicketRegister } from '@/lib/alertMessage';
 const { Text, Title } = Typography;
 const SendTicket = () => {
   const router = useRouter();
@@ -40,13 +52,19 @@ const SendTicket = () => {
     trigger: postUnitTicketPostSubmit,
     isMutating: postUnitTicketLoading,
   } = usePostUnitTicketPostSubmit();
+  const { trigger: patchTicketPostAdd } = usePatchTicketPostAdd();
+  const { trigger: deletePostTicket } = useDeletePostTicket();
+  const { trigger: deleteTicket } = useDeleteTicket();
+
   const [parentCategoryValue, setParentCategoryValue] = useState('');
   const [subCategoryValue, setsubCategoryValue] = useState('');
   const [subCategoryList, setSubCategoryList] = useState([]);
   const [userInfo, setUserInfo] = useState({});
+  const [audioBlobFile, setAudioBlobFile] = useState({});
   const [recording, setRecording] = useState(false);
   const [audioURLModal, setAudioURLModal] = useState('');
   const [audioURL, setAudioURL] = useState('');
+  const [fileList, setFileList] = useState([]);
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
   const [showRecordModal, setShowRecordModal] = useState(false);
@@ -71,7 +89,19 @@ const SendTicket = () => {
     setsubCategoryValue(id);
     refDesc?.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
+  const deleteFiles = async (ticketPostId: string, ticketId: string) => {
+    await deletePostTicket(ticketPostId);
+    await deleteTicket(ticketId);
+    toast.error(failedUpload);
+    setTimeout(() => window.location.reload(), 5000);
+  };
+  const successTicket = (postTicketId: string) => {
+    toast.success(successfulTicketRegister);
+    ticketForm.resetFields();
+    setTimeout(() => {
+      router.push(`/my-ticket/${postTicketId}`);
+    }, 4000);
+  };
   const postTicketHandler = async (values: { message: string }) => {
     const { message } = values;
     const ticketData = {
@@ -90,27 +120,76 @@ const SendTicket = () => {
         media: '',
       };
 
-      await postUnitTicketPostSubmit({ data: ticketPostData });
-      toast.success(successfulTicketRegister);
-      ticketForm.resetFields();
-      setTimeout(() => {
-        router.push(`/my-ticket/${postUnitTicketSubmitResponse.id}`);
-      }, 4000);
+      const { data: postUnitTicketPostSubmitResponsed } =
+        await postUnitTicketPostSubmit({ data: ticketPostData });
+
+      if (audioBlobFile && audioURL) {
+        const audioFile = new File(
+          [audioBlobFile],
+          `recording${new Date()}.wav`,
+          {
+            type: 'audio/wav',
+          },
+        );
+
+        const formData = new FormData();
+        formData.append('file', audioFile);
+
+        try {
+          await patchTicketPostAdd({
+            id: postUnitTicketPostSubmitResponsed.id,
+            data: formData,
+          });
+          setAudioURL('');
+          successTicket(postUnitTicketSubmitResponse.id);
+        } catch (error) {
+          deleteFiles(
+            postUnitTicketPostSubmitResponsed.id,
+            postUnitTicketSubmitResponse.id,
+          );
+        }
+      }
+
+      if (fileList.length > 0) {
+        fileList.map(async (file) => {
+          const formData = new FormData();
+          formData.append('file', file?.originFileObj);
+          try {
+            await patchTicketPostAdd({
+              id: postUnitTicketPostSubmitResponsed.id,
+              data: formData,
+            });
+            setFileList([]);
+          } catch (error) {
+            deleteFiles(
+              postUnitTicketPostSubmitResponsed.id,
+              postUnitTicketSubmitResponse.id,
+            );
+          }
+        });
+        successTicket(postUnitTicketSubmitResponse.id);
+      }
+      if (!fileList.length && !audioURL) {
+        successTicket(postUnitTicketSubmitResponse.id);
+      }
     } catch (error) {
-      toast.error(generalMessage);
+      // toast.error('111111111111111111111');
     }
   };
 
   const startRecording = () => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       mediaRecorderRef.current = new MediaRecorder(stream);
+
       mediaRecorderRef.current.ondataavailable = (event) => {
         audioChunks.current.push(event.data);
       };
       mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunks.current);
+        const audioBlob = new Blob(audioChunks.current, { type: 'audio/weba' });
+        setAudioBlobFile(audioBlob);
         const audioUrl = URL.createObjectURL(audioBlob);
         setAudioURLModal(audioUrl);
+
         audioChunks.current = [];
       };
       mediaRecorderRef.current.start();
@@ -128,6 +207,14 @@ const SendTicket = () => {
   const handleCancelRecord = () => {
     setShowRecordModal(false);
     setAudioURLModal('');
+  };
+
+  const uploadHandler = ({ fileList }) => {
+    setFileList(fileList);
+  };
+  const handleDeleteFile = (file) => {
+    const filteredFile = fileList.filter((item) => item.uid !== file.uid);
+    setFileList(filteredFile);
   };
   useEffect(() => {
     fetchUserInfo();
@@ -232,8 +319,9 @@ const SendTicket = () => {
               >
                 <TextArea rows={4} />
               </Form.Item>
+
               <div className={`${style.attachment_contatiner}`}>
-                <div className={`${style.record_container}`}>
+                <div className={`${style.upload_record_container}`}>
                   <Button
                     onClick={() => {
                       setShowRecordModal(!showRecordModal);
@@ -253,19 +341,39 @@ const SendTicket = () => {
                       />
                       <Button
                         type="text"
-                        onClick={() => setAudioURL('')}
+                        onClick={() => {
+                          setAudioURL('');
+                          setAudioBlobFile('');
+                        }}
                         icon={<AiOutlineDelete size={20} color="#ff0033" />}
                       ></Button>
                       {/*  */}
                     </div>
                   )}
                 </div>
-                <Button
-                  className={`${style.btn_attachment}`}
-                  icon={<MdAttachFile size={23} />}
-                >
-                  افزودن ضمیمه
-                </Button>
+                <div className={`${style.upload_file_container}`}>
+                  <Upload
+                    multiple={true}
+                    onChange={uploadHandler}
+                    showUploadList={false}
+                  >
+                    <Button icon={<MdAttachFile size={23} />}>
+                      افزودن ضمیمه
+                    </Button>
+                  </Upload>
+                  <div className={`${style.file_list_container}`}>
+                    {fileList.map((file, index) => (
+                      <div key={index} className={`${style.file_container}`}>
+                        {file.name}
+                        <Button
+                          onClick={() => handleDeleteFile(file)}
+                          type="text"
+                          icon={<AiOutlineDelete size={18} color="#ff0033" />}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -287,8 +395,7 @@ const SendTicket = () => {
                   disabled={
                     !parentCategoryValue ||
                     !subCategoryValue ||
-                    !hasTouchedFields ||
-                    hasErrors
+                    ((!hasTouchedFields || hasErrors) && !audioURL)
                   }
                 >
                   ارسال تیکت
@@ -327,6 +434,11 @@ const SendTicket = () => {
                 )
               }
             ></Button>
+            {recording && (
+              <Text style={{ textAlign: 'center' }} type="secondary">
+                در حال ضبط صدا
+              </Text>
+            )}
             {audioURLModal && (
               <audio
                 className={`${style.audio}`}
@@ -342,11 +454,3 @@ const SendTicket = () => {
 };
 
 export default SendTicket;
-{
-  /* <Form.Item>
-                <Button onClick={recording ? stopRecording : startRecording}>
-                  {recording ? 'Stop Recording' : 'Start Recording'}
-                </Button>
-                {audioURLModal && <audio src={audioURLModal} controls />}
-              </Form.Item> */
-}

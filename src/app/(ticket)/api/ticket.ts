@@ -59,4 +59,25 @@ export const useGetTicketTimeline = () => {
     async (url, { arg }) => await request(`${url}${arg}`, 'GET', {}, true),
   );
 };
-//
+
+export const usePatchTicketPostAdd = () => {
+  return useSWRMutation(
+    API_ENDPOINTS.PATCH_TICKET_POST_ASSET_ADD,
+    async (url, { arg }: { arg: any }) =>
+      await request(`${url}${arg.id}/`, 'PATCH', arg.data, true, true),
+  );
+};
+
+export const useDeleteTicket = () => {
+  return useSWRMutation(
+    API_ENDPOINTS.DELETE_TICKET,
+    async (url, { arg }) => await request(`${url}${arg}`, 'DELETE', {}, true),
+  );
+};
+
+export const useDeletePostTicket = () => {
+  return useSWRMutation(
+    API_ENDPOINTS.DELETE_POST_TICKET,
+    async (url, { arg }) => await request(`${url}${arg}`, 'DELETE', {}, true),
+  );
+};
