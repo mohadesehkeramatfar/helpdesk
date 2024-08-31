@@ -1,5 +1,6 @@
 'use client';
 
+import withAuth from '@/app/_components/withAuth/WithAuth';
 import { Spin } from 'antd';
 import dynamic from 'next/dynamic';
 
@@ -12,4 +13,4 @@ const SendTicketPage = () => {
   return <SendTicket />;
 };
 
-export default SendTicketPage;
+export default withAuth(SendTicketPage);

@@ -1,6 +1,7 @@
 'use client';
 import dynamic from 'next/dynamic';
 import { Spin } from 'antd';
+import withAuth from '@/app/_components/withAuth/WithAuth';
 
 const TicketDetail = dynamic(
   () => import('../../component/myTickets/ticketDetail/TicketDetail'),
@@ -13,4 +14,4 @@ const TicketDetailPage = () => {
   return <TicketDetail />;
 };
 
-export default TicketDetailPage;
+export default withAuth(TicketDetailPage);
