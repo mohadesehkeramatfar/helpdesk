@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { getRefreshToken, getToken, setToken } from '../token';
+import { getRefreshToken, getToken, setRefreshToken, setToken } from '../token';
 import { API_ENDPOINTS } from './endpoints';
 
 export const client = axios.create({
@@ -16,11 +16,11 @@ const renewToken = async () => {
   });
 
   if (response.status != 200) {
-    // TODO: Renew failed. What to do?
     return;
   }
 
   setToken(response.data.access);
+  setRefreshToken(response.data.refresh);
   return response.data.access;
 };
 
