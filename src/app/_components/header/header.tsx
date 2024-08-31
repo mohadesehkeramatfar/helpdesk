@@ -1,11 +1,11 @@
 'use client';
-import { Button, Dropdown, Flex, Spin, Typography } from 'antd';
+import { Button, Dropdown, Flex } from 'antd';
 import style from './header.module.scss';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getCookies, removeCookies } from '@/lib/cookies';
-import { getStorage, removeStorage } from '@/lib/storage';
+import { removeStorage } from '@/lib/storage';
 import globalStyle from '../../layout.module.scss';
 import useResponsive from '@/lib/hook/useResponsive';
 import {
@@ -15,17 +15,13 @@ import {
 } from '@/lib/services/routes';
 import { LuUser } from 'react-icons/lu';
 import { LiaSignInAltSolid } from 'react-icons/lia';
-import { useEffect, useState } from 'react';
 import { handleRouter } from '@/lib/utils';
 import { MenuProps } from 'antd/lib';
 import { IoIosArrowDown } from 'react-icons/io';
-const { Text } = Typography;
 const Header = () => {
   const router = useRouter();
-  const path = usePathname();
-  const [loading, setLoading] = useState(true);
+  const pathName = usePathname();
   const { isDesktop, isMobile } = useResponsive();
-  const [userInfo, setUserInfo] = useState('');
 
   const logoutHandler = (e) => {
     e.preventDefault();
@@ -33,11 +29,13 @@ const Header = () => {
     removeStorage('user_name');
     removeCookies('access');
     removeCookies('refresh');
-    router.push('/');
-    setLoading(true);
+    if (pathName === '/') window.location.reload();
+    else router.push('/');
+    // setLoading(true);
   };
   const handleSendTicket = () => {
-    handleRouter(router, 'send-ticket');
+    if (pathName === `/send-ticket`) window.location.reload();
+    else handleRouter(router, 'send-ticket');
   };
   const handleMyTicket = (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -66,10 +64,10 @@ const Header = () => {
   ];
 
   const items: MenuProps['items'] = [
-    {
-      label: <Link href={''}>پروفایل</Link>,
-      key: '0',
-    },
+    // {
+    //   label: <Link href={''}>پروفایل</Link>,
+    //   key: '0',
+    // },
     {
       label: <Link href={''}>تیکت‌های من</Link>,
       key: '1',
@@ -84,12 +82,6 @@ const Header = () => {
       key: '3',
     },
   ];
-  useEffect(() => {
-    if (loading) {
-      setUserInfo(getStorage('user_name' ?? ''));
-      setLoading(false);
-    }
-  }, [loading]);
 
   return (
     <div className={`${style.header_container}`}>
@@ -106,9 +98,9 @@ const Header = () => {
             <ul className={`${style.list_menu}`}>
               {listMenu.map((item, index) => {
                 let activeTab = false;
-                if (item.href === '/' && path === '/') {
+                if (item.href === '/' && pathName === '/') {
                   activeTab = true;
-                } else if (item.href !== '/' && path.startsWith(item.href))
+                } else if (item.href !== '/' && pathName.startsWith(item.href))
                   activeTab = true;
 
                 return (
@@ -130,23 +122,24 @@ const Header = () => {
           )}
           {getCookies('access') ? (
             <div className={`${style.auth_container}`}>
-              {loading ? (
-                <Spin />
-              ) : (
-                <>
-                  <Dropdown menu={{ items }} trigger={['click']}>
-                    <a
-                      style={{ cursor: 'pointer' }}
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      <Flex align="center">
-                        <LuUser size={20} />
-                        <IoIosArrowDown size={17} />
-                      </Flex>
-                    </a>
-                  </Dropdown>
-                </>
-              )}
+              <>
+                <Dropdown
+                  overlayStyle={{ marginTop: '40px' }}
+                  menu={{ items }}
+                  trigger={['click']}
+                >
+                  <a
+                    style={{ cursor: 'pointer' }}
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <Flex align="center">
+                      <LuUser size={20} />
+
+                      <IoIosArrowDown size={17} />
+                    </Flex>
+                  </a>
+                </Dropdown>
+              </>
             </div>
           ) : (
             <Button
