@@ -1,4 +1,7 @@
 import style from './layout.module.scss';
+export const metadata = {
+  title: 'ورود | ثبت نام',
+};
 const AuthLayout = ({
   children,
 }: Readonly<{
