@@ -32,15 +32,21 @@ import { MdAttachFile, MdOutlineKeyboardVoice } from 'react-icons/md';
 import { SlMicrophone } from 'react-icons/sl';
 import { IoStopSharp } from 'react-icons/io5';
 import { AiOutlineDelete } from 'react-icons/ai';
-import { failedUpload, successfulTicketRegister } from '@/lib/alertMessage';
+import {
+  failedUpload,
+  generalMessage,
+  successfulTicketRegister,
+} from '@/lib/alertMessage';
 const { Text, Title } = Typography;
 const SendTicket = () => {
   const router = useRouter();
   const [ticketForm] = useForm();
   const refSubCategory = useRef(null);
   const refDesc = useRef(null);
-  const { data: getParentCategoriesList, isLoading: loadingGetParentCategory } =
-    useGetParentCategoriesList();
+  const {
+    trigger: getParentCategoriesList,
+    isMutating: loadingGetParentCategory,
+  } = useGetParentCategoriesList();
   const {
     trigger: getSubCategoriesList,
     isMutating: isLoadingGetSubCategoryList,
@@ -55,7 +61,7 @@ const SendTicket = () => {
   const { trigger: patchTicketPostAdd } = usePatchTicketPostAdd();
   const { trigger: deletePostTicket } = useDeletePostTicket();
   const { trigger: deleteTicket } = useDeleteTicket();
-
+  const [categoryList, setCategoryList] = useState([]);
   const [parentCategoryValue, setParentCategoryValue] = useState('');
   const [subCategoryValue, setsubCategoryValue] = useState('');
   const [subCategoryList, setSubCategoryList] = useState([]);
@@ -65,13 +71,27 @@ const SendTicket = () => {
   const [audioURLModal, setAudioURLModal] = useState('');
   const [audioURL, setAudioURL] = useState('');
   const [fileList, setFileList] = useState([]);
+  const [removedFiles, setRemovedFiles] = useState([]);
+
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
   const [showRecordModal, setShowRecordModal] = useState(false);
 
   const fetchUserInfo = async () => {
-    const { data: userInfo } = await getUserInfo();
-    setUserInfo(userInfo);
+    try {
+      const { data: userInfo } = await getUserInfo();
+      setUserInfo(userInfo);
+    } catch (error) {
+      toast.error(generalMessage);
+    }
+  };
+  const fetchParentCategory = async () => {
+    try {
+      const { data: parentCategoriesList } = await getParentCategoriesList();
+      setCategoryList(parentCategoriesList);
+    } catch (error) {
+      toast.error(generalMessage);
+    }
   };
   const onChangeCategoryList = async (id) => {
     setParentCategoryValue(id);
@@ -172,9 +192,7 @@ const SendTicket = () => {
       if (!fileList.length && !audioURL) {
         successTicket(postUnitTicketSubmitResponse.id);
       }
-    } catch (error) {
-      // toast.error('111111111111111111111');
-    }
+    } catch (error) {}
   };
 
   const startRecording = () => {
@@ -209,15 +227,25 @@ const SendTicket = () => {
     setAudioURLModal('');
   };
 
-  const uploadHandler = ({ fileList }) => {
-    setFileList(fileList);
+  const uploadHandler = (e) => {
+    const currentFile = e.file;
+    const currentFileList = e.fileList;
+
+    const filteredList = currentFileList.filter(
+      (item) => !removedFiles.some((removed) => removed.uid === item.uid),
+    );
+    setFileList(filteredList);
   };
   const handleDeleteFile = (file) => {
-    const filteredFile = fileList.filter((item) => item.uid !== file.uid);
-    setFileList(filteredFile);
+    setRemovedFiles((prev) => [...prev, file]); // فایل حذف‌شده را به لیست حذف‌ها اضافه کن
+    setFileList((prevList) => prevList.filter((item) => item.uid !== file.uid));
+
+    // const filteredFile = fileList.filter((item) => item.uid !== file.uid);
+    // setFileList(filteredFile);
   };
   useEffect(() => {
     fetchUserInfo();
+    fetchParentCategory();
   }, []);
 
   if (isLoadingGetUserInfo || loadingGetParentCategory) {
@@ -247,7 +275,7 @@ const SendTicket = () => {
               value={parentCategoryValue}
               className={`${style.radio_container}`}
             >
-              {getParentCategoriesList?.data.map(
+              {categoryList.map(
                 (
                   item: {
                     icon: string;
@@ -345,7 +373,7 @@ const SendTicket = () => {
                           setAudioURL('');
                           setAudioBlobFile('');
                         }}
-                        icon={<AiOutlineDelete size={20} color="#ff0033" />}
+                        icon={<AiOutlineDelete size={18} color="#ff0033" />}
                       ></Button>
                       {/*  */}
                     </div>
@@ -353,9 +381,11 @@ const SendTicket = () => {
                 </div>
                 <div className={`${style.upload_file_container}`}>
                   <Upload
+                    accept=".png ,.jpeg,.jpg,.pdf "
                     multiple={true}
                     onChange={uploadHandler}
                     showUploadList={false}
+                    fileList={fileList}
                   >
                     <Button icon={<MdAttachFile size={23} />}>
                       افزودن ضمیمه
@@ -364,7 +394,9 @@ const SendTicket = () => {
                   <div className={`${style.file_list_container}`}>
                     {fileList.map((file, index) => (
                       <div key={index} className={`${style.file_container}`}>
-                        {file.name}
+                        <span className={`${style.file_name}`}>
+                          {file.name}
+                        </span>
                         <Button
                           onClick={() => handleDeleteFile(file)}
                           type="text"

@@ -78,7 +78,15 @@
               display: flex;
               align-items: center;
               column-gap: 10px;
-              // justify-content: space-between;
+              justify-content: space-between;
+
+              width: 150px;
+              .file_name {
+                white-space: nowrap;
+                width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
             }
           }
         }

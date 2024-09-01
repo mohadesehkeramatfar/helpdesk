@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 export const useGetParentCategoriesList = () => {
-  return useSWR(
+  return useSWRMutation(
     API_ENDPOINTS.GET_PARENT_CATEGORY_TICKET_LIST,
     async (url) => await request(url, 'GET', {}, true),
   );
