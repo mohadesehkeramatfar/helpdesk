@@ -37,6 +37,7 @@ import {
   generalMessage,
   successfulTicketRegister,
 } from '@/lib/alertMessage';
+import useResponsive from '@/lib/hook/useResponsive';
 const { Text, Title } = Typography;
 const SendTicket = () => {
   const router = useRouter();
@@ -61,6 +62,7 @@ const SendTicket = () => {
   const { trigger: patchTicketPostAdd } = usePatchTicketPostAdd();
   const { trigger: deletePostTicket } = useDeletePostTicket();
   const { trigger: deleteTicket } = useDeleteTicket();
+  const { isMobile } = useResponsive();
   const [categoryList, setCategoryList] = useState([]);
   const [parentCategoryValue, setParentCategoryValue] = useState('');
   const [subCategoryValue, setsubCategoryValue] = useState('');
@@ -72,7 +74,6 @@ const SendTicket = () => {
   const [audioURL, setAudioURL] = useState('');
   const [fileList, setFileList] = useState([]);
   const [removedFiles, setRemovedFiles] = useState([]);
-
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
   const [showRecordModal, setShowRecordModal] = useState(false);
@@ -113,7 +114,7 @@ const SendTicket = () => {
     await deletePostTicket(ticketPostId);
     await deleteTicket(ticketId);
     toast.error(failedUpload);
-    setTimeout(() => window.location.reload(), 5000);
+    // setTimeout(() => window.location.reload(), 5000);
   };
   const successTicket = (postTicketId: string) => {
     toast.success(successfulTicketRegister);
@@ -137,12 +138,50 @@ const SendTicket = () => {
       const ticketPostData = {
         message,
         ticket: postUnitTicketSubmitResponse.id,
-        media: '',
+        // media: '',
       };
-
       const { data: postUnitTicketPostSubmitResponsed } =
         await postUnitTicketPostSubmit({ data: ticketPostData });
+      if (audioBlobFile && audioURL && fileList.length > 0) {
+        const audioFile = new File(
+          [audioBlobFile],
+          `recording${new Date()}.wav`,
+          {
+            type: 'audio/wav',
+          },
+        );
 
+        const formData = new FormData();
+        formData.append('file', audioFile);
+
+        try {
+          fileList.map(async (file) => {
+            const formData = new FormData();
+            formData.append('file', file?.originFileObj);
+            await patchTicketPostAdd({
+              id: postUnitTicketPostSubmitResponsed.id,
+              data: formData,
+            });
+            setFileList([]);
+          });
+          await patchTicketPostAdd({
+            id: postUnitTicketPostSubmitResponsed.id,
+            data: formData,
+          });
+          setAudioURL('');
+
+          successTicket(postUnitTicketSubmitResponse.id);
+        } catch (error) {
+          console.log('Sss');
+
+          deleteFiles(
+            postUnitTicketPostSubmitResponsed.id,
+            postUnitTicketSubmitResponse.id,
+          );
+        }
+
+        return;
+      }
       if (audioBlobFile && audioURL) {
         const audioFile = new File(
           [audioBlobFile],
@@ -336,10 +375,13 @@ const SendTicket = () => {
           </div>
           <div className={`${style.question_section}`} ref={refDesc}>
             <Title level={4}>توضیحات</Title>
-            <div className={`${style.content}`}>
+            <div className={`${style.message_content}`}>
               <Form.Item
                 rules={[
-                  { required: true, message: 'لطفا این قسمت را خالی نگذارید' },
+                  {
+                    required: !audioURL && true,
+                    message: 'لطفا این قسمت را خالی نگذارید',
+                  },
                 ]}
                 name="message"
                 label="شرح مشکل"
@@ -351,6 +393,7 @@ const SendTicket = () => {
               <div className={`${style.attachment_contatiner}`}>
                 <div className={`${style.upload_record_container}`}>
                   <Button
+                    className={`${style.btn_attachment}`}
                     onClick={() => {
                       setShowRecordModal(!showRecordModal);
                       setAudioURLModal('');
@@ -365,6 +408,7 @@ const SendTicket = () => {
                       <audio
                         src={audioURL}
                         controls
+                        controlsList="nodownload"
                         className={`${style.audio}`}
                       />
                       <Button
@@ -439,6 +483,7 @@ const SendTicket = () => {
       </div>
       {showRecordModal && (
         <Modal
+          closable={false}
           open={showRecordModal}
           title="ضبط صدا"
           footer={[
@@ -460,9 +505,9 @@ const SendTicket = () => {
               onClick={recording ? stopRecording : startRecording}
               icon={
                 recording ? (
-                  <IoStopSharp color="#ff0033" size={50} />
+                  <IoStopSharp color="#ff0033" size={isMobile ? 30 : 50} />
                 ) : (
-                  <SlMicrophone color="#0098a9" size={50} />
+                  <SlMicrophone color="#0098a9" size={isMobile ? 30 : 50} />
                 )
               }
             ></Button>
@@ -471,13 +516,7 @@ const SendTicket = () => {
                 در حال ضبط صدا
               </Text>
             )}
-            {audioURLModal && (
-              <audio
-                className={`${style.audio}`}
-                src={audioURLModal}
-                controls
-              />
-            )}
+            {audioURLModal && <audio src={audioURLModal} controls />}
           </div>
         </Modal>
       )}

@@ -51,18 +51,31 @@
     .question_section {
       display: grid;
       row-gap: 15px;
+      .message_content {
+        width: 100%;
+      }
       .attachment_contatiner {
         display: flex;
         flex-direction: column;
         gap: 15px;
-        width: max-content;
+        width: min-content;
+        margin-top: 30px;
+
         .upload_record_container {
           display: flex;
           gap: 10px;
+          // border: 1px solid red;
+          // width: 80%;
+
+          // width: 0%;
           .file_container {
             display: flex;
             gap: 10px;
             align-items: center;
+          }
+          @media screen and (max-width: $mobile-width) {
+            flex-direction: column;
+            // width: min-content;
           }
         }
         .upload_file_container {
@@ -92,7 +105,7 @@
         }
 
         .btn_attachment {
-          width: max-content;
+          width: min-content;
         }
       }
     }
@@ -120,43 +133,46 @@
     border: 1px solid $primary;
     padding: 50px;
     border-radius: 100%;
+    @media screen and (max-width: $mobile-width) {
+      padding: 30px;
+    }
   }
 }
-.audio {
-  height: 30px;
-  background-color: $gray-200;
-  border-radius: 15px;
-  overflow: hidden;
-  padding: 5px;
-}
-.audio::-webkit-media-controls-panel {
-  background-color: $gray-200;
-  border-radius: 15px;
-  // height: 20px;
-}
+// .audio {
+//   height: 30px;
+//   background-color: $gray-200;
+//   border-radius: 15px;
+//   overflow: hidden;
+//   padding: 5px;
+// }
+// .audio::-webkit-media-controls-panel {
+//   background-color: $gray-200;
+//   border-radius: 15px;
+//   // height: 20px;
+// }
 
-.audio::-webkit-media-controls-play-button,
-.audio::-webkit-media-controls-pause-button {
-  background-color: $gray-200;
-  border-radius: 100%;
-  border: none;
-  // height: 15px;
-  // width: 15px;
-}
-.audio::-webkit-media-controls-play-button,
-.audio::-webkit-media-controls-pause-button:focus {
-  border: none;
-  // height: 15px;
-  // width: 15px;
-}
+// .audio::-webkit-media-controls-play-button,
+// .audio::-webkit-media-controls-pause-button {
+//   background-color: $gray-200;
+//   border-radius: 100%;
+//   border: none;
+//   // height: 15px;
+//   // width: 15px;
+// }
+// .audio::-webkit-media-controls-play-button,
+// .audio::-webkit-media-controls-pause-button:focus {
+//   border: none;
+//   // height: 15px;
+//   // width: 15px;
+// }
 
-.audio::-webkit-media-controls-timeline {
-  // background-color: #392d2d;
-  // color: #ff5722; /* رنگ خط پیشرفت */
-}
+// .audio::-webkit-media-controls-timeline {
+//   // background-color: #392d2d;
+//   // color: #ff5722; /* رنگ خط پیشرفت */
+// }
 
-/* پنهان کردن دکمه‌های اضافی */
-.audio::-webkit-media-controls-mute-button,
-.audio::-webkit-media-controls-volume-slider-container {
-  display: none; /* پنهان کردن دکمه قطع صدا و ولوم */
-}
+// /* پنهان کردن دکمه‌های اضافی */
+// .audio::-webkit-media-controls-mute-button,
+// .audio::-webkit-media-controls-volume-slider-container {
+//   display: none; /* پنهان کردن دکمه قطع صدا و ولوم */
+// }
