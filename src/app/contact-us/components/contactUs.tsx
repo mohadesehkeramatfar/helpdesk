@@ -36,10 +36,10 @@ const ContactUs = () => {
   ];
 
   return (
-    <>
+    <div style={{ border: '1px solid transparent' }}>
       <Header />
 
-      <div className={`${globalStyle.container}`}>
+      <div className={`${globalStyle.container} ${style.contactus_container}`}>
         <div className={`${style.title_container}`}>
           <Title className={`${style.ant_typography}`} level={3}>
             تماس با ما
@@ -66,7 +66,7 @@ const ContactUs = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
