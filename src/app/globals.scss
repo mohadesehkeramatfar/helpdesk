@@ -58,3 +58,47 @@ h2 {
 p {
   font-size: 1.6rem;
 }
+audio {
+  height: 30px;
+  background-color: $gray-200;
+  border-radius: 15px;
+  overflow: hidden;
+  padding: 5px;
+  // border: 1px solid blue;
+  width: 230px;
+}
+audio::-webkit-media-controls-panel {
+  background-color: $gray-200;
+  width: 100%;
+  border-radius: 15px;
+  // height: 20px;
+}
+
+// audio::-webkit-media-controls-timeline-container {
+//   background-color: teal;
+// }
+audio::-webkit-media-controls-play-button,
+audio::-webkit-media-controls-pause-button {
+  background-color: $gray-200;
+  border-radius: 100%;
+  border: none;
+  // height: 15px;
+  // width: 15px;
+}
+audio::-webkit-media-controls-play-button,
+audio::-webkit-media-controls-pause-button:focus {
+  border: none;
+  // height: 15px;
+  // width: 15px;
+}
+
+audio::-webkit-media-controls-timeline {
+  // background-color: #63db75;
+  // color: #ff5722; /* رنگ خط پیشرفت */
+}
+
+/* پنهان کردن دکمه‌های اضافی */
+audio::-webkit-media-controls-mute-button,
+audio::-webkit-media-controls-volume-slider-container {
+  display: none; /* پنهان کردن دکمه قطع صدا و ولوم */
+}
