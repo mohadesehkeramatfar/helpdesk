@@ -139,7 +139,7 @@ const MyTickets = () => {
         <div className={`${style.statistics_container}`}>
           {statisticData.map((item, index) => (
             <Statistic
-              key={index}
+              key={item.id}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
