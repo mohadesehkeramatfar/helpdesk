@@ -267,11 +267,14 @@ const TicketDetail = () => {
                     </Flex>
                   </div>
                   <Divider style={{ padding: 0, margin: 0 }} />
-                  {item?.message ? (
-                    <div className={`${style.comment_card}`}>
-                      <Text> {item?.message}</Text>
-                    </div>
-                  ) : null}
+
+                  <div className={`${style.comment_card}`}>
+                    {item?.message ? (
+                      <Text>{item.message}</Text>
+                    ) : (
+                      <Text type="secondary">پیام صوتی</Text>
+                    )}
+                  </div>
 
                   <Divider style={{ padding: 0, margin: 0 }} />
                   <Flex
