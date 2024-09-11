@@ -50,24 +50,19 @@ const Header = () => {
     },
     {
       id: 1,
-      title: 'تماس با ما',
-      href: contactUsPageRoute,
-      onclick: null,
-    },
-
-    {
-      id: 2,
       title: 'تیکت‌های من',
       href: myTicketPageRoute,
       onclick: handleMyTicket,
     },
+    {
+      id: 2,
+      title: 'تماس با ما',
+      href: contactUsPageRoute,
+      onclick: null,
+    },
   ];
 
   const items: MenuProps['items'] = [
-    // {
-    //   label: <Link href={''}>پروفایل</Link>,
-    //   key: '0',
-    // },
     {
       label: <Link href={''}>تیکت‌های من</Link>,
       key: '1',
