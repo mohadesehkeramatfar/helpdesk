@@ -3,6 +3,7 @@ import style from './sendTicket.module.scss';
 import {
   Button,
   Divider,
+  Flex,
   Form,
   Modal,
   Radio,
@@ -77,6 +78,8 @@ const SendTicket = () => {
   const mediaRecorderRef = useRef(null);
   const audioChunks = useRef([]);
   const [showRecordModal, setShowRecordModal] = useState(false);
+  const [selectedDay, setSelectedDay] = useState('');
+  const [selectedTimeList, setSelectedTimeList] = useState([]);
 
   const fetchUserInfo = async () => {
     try {
@@ -291,6 +294,81 @@ const SendTicket = () => {
     return <Spin />;
   }
 
+  const dateListTest = [
+    {
+      id: '1',
+      day: 'شنبه',
+      date: '1 / 1',
+      disabled: false,
+      timeList: [
+        { id: '1', title: 'ساعت 9-11', disabled: false },
+        { id: '2', title: 'ساعت 11-13', disabled: true },
+        { id: '3', title: 'ساعت 14-16', disabled: true },
+        { id: '4', title: 'ساعت 16-18', disabled: false },
+      ],
+    },
+    {
+      id: '2',
+      day: 'یکشنبه',
+      date: '1 / 2',
+      disabled: false,
+      timeList: [
+        { id: '1', title: 'ساعت 9-11', disabled: false },
+        { id: '2', title: 'ساعت 11-13', disabled: false },
+        { id: '3', title: 'ساعت 14-16', disabled: false },
+        { id: '4', title: 'ساعت 16-18', disabled: false },
+      ],
+    },
+    {
+      id: '3',
+      day: 'دوشنبه',
+      date: '1 / 1',
+      disabled: true,
+      timeList: [
+        { id: '1', title: 'ساعت 9-11', disabled: true },
+        { id: '2', title: 'ساعت 11-13', disabled: true },
+        { id: '3', title: 'ساعت 14-16', disabled: false },
+        { id: '4', title: 'ساعت 16-18', disabled: true },
+      ],
+    },
+    {
+      id: '4',
+      day: 'سه شنبه',
+      date: '1 / 1',
+      disabled: false,
+      timeList: [
+        { id: '1', title: 'ساعت 9-11', disabled: false },
+        { id: '2', title: 'ساعت 11-13', disabled: true },
+        { id: '3', title: 'ساعت 14-16', disabled: true },
+        { id: '4', title: 'ساعت 16-18', disabled: true },
+      ],
+    },
+    {
+      id: '5',
+      day: 'چهارشنبه',
+      date: '1 / 1',
+      disabled: false,
+      timeList: [
+        { id: '1', title: 'ساعت 9-11', disabled: true },
+        { id: '2', title: 'ساعت 11-13', disabled: true },
+        { id: '3', title: 'ساعت 14-16', disabled: true },
+        { id: '4', title: 'ساعت 16-18', disabled: true },
+      ],
+    },
+    {
+      id: '6',
+      day: 'پنج شنبه',
+      date: '1 / 1',
+      disabled: true,
+      timeList: [
+        { id: '1', title: 'ساعت 9-11', disabled: true },
+        { id: '2', title: 'ساعت 11-13', disabled: true },
+        { id: '3', title: 'ساعت 14-16', disabled: true },
+        { id: '4', title: 'ساعت 16-18', disabled: true },
+      ],
+    },
+  ];
+
   return (
     <>
       <ToastComponent />
@@ -305,6 +383,7 @@ const SendTicket = () => {
           onFinish={postTicketHandler}
           className={`${style.form_container}`}
         >
+          {/* PARENT CATEGORY */}
           <div className={`${style.question_section}`}>
             <Title level={4}>دسته یا دپارتمان</Title>
             <span className={`${style.text}`}>
@@ -337,6 +416,8 @@ const SendTicket = () => {
               )}
             </Radio.Group>
           </div>
+
+          {/* SUBCATEGORY */}
           <div ref={refSubCategory}>
             {subCategoryList.length > 0 &&
               (isLoadingGetSubCategoryList ? (
@@ -373,8 +454,10 @@ const SendTicket = () => {
                 </div>
               ))}
           </div>
+          {/* MESSAGES AND ATTACHMENT */}
           <div className={`${style.question_section}`} ref={refDesc}>
             <Title level={4}>توضیحات</Title>
+
             <div className={`${style.message_content}`}>
               <Form.Item
                 rules={[
@@ -452,6 +535,54 @@ const SendTicket = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* REFERRAL TIME */}
+          <div className={`${style.referral_time_container}`}>
+            <Flex vertical={true} gap={'5px'}>
+              {' '}
+              <Title level={4}>زمان مراجعه</Title>
+              <Text style={{ fontSize: isMobile ? '12px' : '14px' }}>
+                زمان مراجعه کارشناسان به واحد شما ممکن است بدلیل تأمین قطعات یا
+                هماهنگی با سایر دپارتمان‌ها، با زمان پیشنهادی شما اختلاف داشته
+                باشد.
+              </Text>
+            </Flex>
+            <div className={`${style.date_card_container}`}>
+              {dateListTest.map((item, index) => (
+                <Button
+                  disabled={item.disabled}
+                  key={index}
+                  style={{ padding: '30px 15px', minWidth: '100px' }}
+                  className={`${style.date_card}  ${selectedDay === item.id ? style.selected : ''}`}
+                  onClick={() => {
+                    setSelectedDay(item.id);
+                    setSelectedTimeList(item.timeList);
+                  }}
+                >
+                  <Title level={5}>{item.day}</Title>
+                  <Text type="secondary">{item.date}</Text>
+                </Button>
+              ))}
+            </div>
+            <Divider style={{ margin: 0, padding: 0 }} />
+
+            {selectedTimeList?.length > 0 && (
+              <Radio.Group className={`${style.time_container}`}>
+                {selectedTimeList.map((time) => (
+                  <>
+                    <Radio
+                      disabled={time.disabled}
+                      key={time.id}
+                      value={time.id}
+                    >
+                      {time.title}
+                    </Radio>
+                    <Divider style={{ margin: 0, padding: 0 }} />
+                  </>
+                ))}
+              </Radio.Group>
+            )}
           </div>
 
           <Form.Item className={`${style.form_item}`} shouldUpdate>

@@ -47,6 +47,14 @@
 
     .form_item {
       align-self: flex-end;
+      @media screen and (max-width: $mobile-width) {
+        width: 100%;
+      }
+      .btn {
+        @media screen and (max-width: $mobile-width) {
+          width: 100%;
+        }
+      }
     }
     .question_section {
       display: grid;
@@ -121,6 +129,30 @@
       flex-wrap: wrap;
       overflow: hidden;
     }
+    .referral_time_container {
+      display: flex;
+      flex-direction: column;
+      row-gap: 20px;
+      .date_card_container {
+        display: flex;
+        align-items: center;
+        overflow: scroll;
+        padding-bottom: 10px;
+        column-gap: 20px;
+        .date_card {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+      .time_container {
+        display: flex;
+        flex-direction: column;
+        row-gap: 15px;
+      }
+      .selected {
+        border: 1px solid $primary;
+      }
+    }
   }
 }
 .content_modal {
@@ -138,41 +170,3 @@
     }
   }
 }
-// .audio {
-//   height: 30px;
-//   background-color: $gray-200;
-//   border-radius: 15px;
-//   overflow: hidden;
-//   padding: 5px;
-// }
-// .audio::-webkit-media-controls-panel {
-//   background-color: $gray-200;
-//   border-radius: 15px;
-//   // height: 20px;
-// }
-
-// .audio::-webkit-media-controls-play-button,
-// .audio::-webkit-media-controls-pause-button {
-//   background-color: $gray-200;
-//   border-radius: 100%;
-//   border: none;
-//   // height: 15px;
-//   // width: 15px;
-// }
-// .audio::-webkit-media-controls-play-button,
-// .audio::-webkit-media-controls-pause-button:focus {
-//   border: none;
-//   // height: 15px;
-//   // width: 15px;
-// }
-
-// .audio::-webkit-media-controls-timeline {
-//   // background-color: #392d2d;
-//   // color: #ff5722; /* رنگ خط پیشرفت */
-// }
-
-// /* پنهان کردن دکمه‌های اضافی */
-// .audio::-webkit-media-controls-mute-button,
-// .audio::-webkit-media-controls-volume-slider-container {
-//   display: none; /* پنهان کردن دکمه قطع صدا و ولوم */
-// }
