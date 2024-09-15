@@ -16,10 +16,12 @@ import {
   useDeleteTicket,
   useGetParentCategoriesList,
   useGetSubCategoriesList,
+  useGetTicketTimeIntervalsList,
   usePatchTicketPostAdd,
   usePostUnitTicketPostSubmit,
   usePostUnitTicketSubmit,
 } from '../api/ticket';
+import moment from 'moment-jalaali';
 import { useGetUserInfo } from '@/app/auth/api/auth';
 import { useEffect, useRef, useState } from 'react';
 
@@ -63,6 +65,10 @@ const SendTicket = () => {
   const { trigger: patchTicketPostAdd } = usePatchTicketPostAdd();
   const { trigger: deletePostTicket } = useDeletePostTicket();
   const { trigger: deleteTicket } = useDeleteTicket();
+  const {
+    data: ticketTimeIntervalsList,
+    isLoading: ticketTimeIntervalsListLoading,
+  } = useGetTicketTimeIntervalsList();
   const { isMobile } = useResponsive();
   const [categoryList, setCategoryList] = useState([]);
   const [parentCategoryValue, setParentCategoryValue] = useState('');
@@ -79,7 +85,7 @@ const SendTicket = () => {
   const audioChunks = useRef([]);
   const [showRecordModal, setShowRecordModal] = useState(false);
   const [selectedDay, setSelectedDay] = useState('');
-  const [selectedTimeList, setSelectedTimeList] = useState([]);
+  const [selectedTime, setSelectedTime] = useState('');
 
   const fetchUserInfo = async () => {
     try {
@@ -132,6 +138,7 @@ const SendTicket = () => {
       unit: userInfo.id,
       categories: [parentCategoryValue, subCategoryValue],
       status: '55c66a81-91fc-4d4c-85c9-00328aacc2eb',
+      visit_interval: selectedTime,
     };
 
     try {
@@ -175,8 +182,6 @@ const SendTicket = () => {
 
           successTicket(postUnitTicketSubmitResponse.id);
         } catch (error) {
-          console.log('Sss');
-
           deleteFiles(
             postUnitTicketPostSubmitResponsed.id,
             postUnitTicketSubmitResponse.id,
@@ -290,9 +295,35 @@ const SendTicket = () => {
     fetchParentCategory();
   }, []);
 
-  if (isLoadingGetUserInfo || loadingGetParentCategory) {
+  if (
+    isLoadingGetUserInfo ||
+    loadingGetParentCategory ||
+    ticketTimeIntervalsListLoading
+  ) {
     return <Spin />;
   }
+
+  const daysOfWeek = [
+    'یکشنبه',
+    'دوشنبه',
+    'سه‌شنبه',
+    'چهارشنبه',
+    'پنج‌شنبه',
+    'جمعه',
+    'شنبه',
+  ];
+  const groupedData = ticketTimeIntervalsList.data.reduce((acc, item) => {
+    if (!acc[item.date]) {
+      acc[item.date] = [];
+    }
+    acc[item.date].push(item);
+    return acc;
+  }, {});
+  const getDayOfWeek = (dateString: string) => {
+    const date = new Date(dateString);
+    return daysOfWeek[date.getDay()];
+  };
+  // console.log('ticketTimeIntervalsList.data', ticketTimeIntervalsList.data);
 
   const dateListTest = [
     {
@@ -549,25 +580,78 @@ const SendTicket = () => {
               </Text>
             </Flex>
             <div className={`${style.date_card_container}`}>
-              {dateListTest.map((item, index) => (
+              {Object.keys(groupedData).map((date, index) => {
+                return (
+                  <Button
+                    // disabled={!date.limit}
+                    key={index}
+                    style={{ padding: '30px 15px', minWidth: '100px' }}
+                    className={`${style.date_card}  ${selectedDay === date ? style.selected : ''}`}
+                    onClick={() => {
+                      setSelectedDay(selectedDay === date ? null : date);
+                      // setSelectedDay(date.id);
+                      // setSelectedTimeList(date.timeList);
+                    }}
+                  >
+                    <Title level={5}>{getDayOfWeek(date)}</Title>
+                    <Text type="secondary">
+                      {moment(date).format('jYYYY/jM/jD')}
+                    </Text>
+                  </Button>
+                );
+              })}
+              {/* {ticketTimeIntervalsList.data.map((item, index) => (
                 <Button
-                  disabled={item.disabled}
+                  disabled={!item.limit}
                   key={index}
                   style={{ padding: '30px 15px', minWidth: '100px' }}
                   className={`${style.date_card}  ${selectedDay === item.id ? style.selected : ''}`}
                   onClick={() => {
                     setSelectedDay(item.id);
-                    setSelectedTimeList(item.timeList);
+                    // setSelectedTimeList(item.timeList);
                   }}
                 >
-                  <Title level={5}>{item.day}</Title>
-                  <Text type="secondary">{item.date}</Text>
+                  <Title level={5}>{getDayOfWeek(item.date)}</Title>
+                  <Text type="secondary">
+                    {moment(item.date).format('jYYYY/jM/jD')}
+                  </Text>
                 </Button>
-              ))}
+              ))} */}
             </div>
             <Divider style={{ margin: 0, padding: 0 }} />
+            {Object.keys(groupedData).map(
+              (date, index) =>
+                selectedDay === date && (
+                  <Radio.Group
+                    key={index}
+                    className={`${style.time_container}`}
+                  >
+                    {groupedData[date].map((time) => {
+                      console.log('time', time);
+                      console.log('groupedData', groupedData);
 
-            {selectedTimeList?.length > 0 && (
+                      return (
+                        <>
+                          <Radio
+                            disabled={!time.limit}
+                            key={time.id}
+                            value={time.id}
+                            onChange={() => setSelectedTime(time.id)}
+                          >
+                            {time.start_time.split(':')[0]}:
+                            {time.start_time.split(':')[1]} تا{' '}
+                            {time.end_time.split(':')[0]}:
+                            {time.end_time.split(':')[1]}
+                          </Radio>
+                          <Divider style={{ margin: 0, padding: 0 }} />
+                        </>
+                      );
+                    })}
+                  </Radio.Group>
+                ),
+            )}
+
+            {/* {selectedTimeList?.length > 0 && (
               <Radio.Group className={`${style.time_container}`}>
                 {selectedTimeList.map((time) => (
                   <>
@@ -582,7 +666,7 @@ const SendTicket = () => {
                   </>
                 ))}
               </Radio.Group>
-            )}
+            )} */}
           </div>
 
           <Form.Item className={`${style.form_item}`} shouldUpdate>

@@ -81,3 +81,10 @@ export const useDeletePostTicket = () => {
     async (url, { arg }) => await request(`${url}${arg}`, 'DELETE', {}, true),
   );
 };
+
+export const useGetTicketTimeIntervalsList = () => {
+  return useSWR(
+    API_ENDPOINTS.GET_TICKET_TIME_INTERVALS_LIST,
+    async (url) => await request(url, 'GET', {}, true),
+  );
+};

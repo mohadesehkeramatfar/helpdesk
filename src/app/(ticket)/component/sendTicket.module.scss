@@ -136,7 +136,7 @@
       .date_card_container {
         display: flex;
         align-items: center;
-        overflow: scroll;
+        overflow: auto;
         padding-bottom: 10px;
         column-gap: 20px;
         .date_card {
