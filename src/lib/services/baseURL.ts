@@ -18,7 +18,6 @@ const renewToken = async () => {
   if (response.status != 200) {
     return;
   }
-  console.log('response', response);
 
   setToken(response.data.access);
   // setRefreshToken(response.data.access);

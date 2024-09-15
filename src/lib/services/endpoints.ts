@@ -21,6 +21,8 @@ export const API_ENDPOINTS = {
   GET_TICKET_TIMELINE: '/ticket/ticket_timeline/v1/',
   DELETE_TICKET: '/ticket/ticket_delete/',
   DELETE_POST_TICKET: '/ticket/ticket_post_delete/',
+  GET_TICKET_TIME_INTERVALS_LIST: '/ticket/ticket_time_intervals_list/',
+
   // * IMAGE FILE
   PATCH_TICKET_POST_ASSET_ADD: '/ticket/ticket_post_asset_add/',
 };
