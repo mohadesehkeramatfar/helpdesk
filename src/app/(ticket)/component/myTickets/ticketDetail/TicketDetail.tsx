@@ -194,7 +194,8 @@ const TicketDetail = () => {
   }
 
   let picNumber = 1;
-  const { categories, unit, status, created_at } = unitTicketDetail;
+  const { categories, unit, status, created_at, visit_interval } =
+    unitTicketDetail;
 
   return (
     <div className={`${style.ticket_detail_container}`}>
@@ -218,6 +219,17 @@ const TicketDetail = () => {
             {moment(created_at).format('jYYYY/jM/jD ساعت HH:mm')}
           </Text>
         </div>
+        <Flex gap={'10px'}>
+          <Text>زمان پیشنهادی مراجعه</Text>
+          <Text>{moment(visit_interval.date).format('jYYYY/jM/jD ')}</Text>
+          <Text>
+            ساعت {visit_interval.start_time.split(':')[0]}:
+            {visit_interval.start_time.split(':')[1]}
+            {` `} تا {` `}
+            {visit_interval.end_time.split(':')[0]}:
+            {visit_interval.end_time.split(':')[1]}
+          </Text>
+        </Flex>
         <Divider style={{ margin: 0, padding: 0 }} />
       </div>
 
