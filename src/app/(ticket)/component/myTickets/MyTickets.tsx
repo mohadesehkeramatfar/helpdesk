@@ -121,30 +121,20 @@ const MyTickets = () => {
       <div className={`${style.title_container}`}>
         <Title level={4}>تیکت‌های من</Title>
         <div className={`${style.statistics_container}`}>
-          {resultOfgetTicketStatusTagReport.map(
-            (item: {
-              color: string | undefined;
-              ticket_count: number;
-              title: string;
-              id: string;
-            }) => (
-              <Statistic
-                key={item.id}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
-                title={
-                  <Text datatype={item.title} className={`${style.title}`}>
-                    {item.title}
-                  </Text>
-                }
-                value={item.ticket_count}
-                valueStyle={{ color: item.color }}
-              />
-            ),
-          )}
+          {statisticData.map((item, index) => (
+            <Statistic
+              key={item.id}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+              title={<Text>{item.title}</Text>}
+              value={150}
+              // {item.value}
+              valueStyle={{ color: item.color }}
+            />
+          ))}
         </div>
       </div>
       <Divider style={{ paddingBottom: 0, marginBottom: 0 }} />

@@ -1,4 +1,4 @@
-@import '@/app/variables.module.scss';
+@import '../../../../variables.module.scss';
 .ticket_detail_container {
   display: flex;
   flex-direction: column;
@@ -13,6 +13,52 @@
 
       .btn {
         justify-self: flex-end;
+      }
+    }
+    .attachment_contatiner {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: max-content;
+      margin-top: 5px;
+
+      .upload_record_container {
+        display: flex;
+        gap: 10px;
+        .file_container {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+        }
+      }
+      .upload_file_container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        .file_list_container {
+          display: flex;
+          flex-direction: column;
+          // gap: 10px;
+          // width: 130%;
+          .file_container {
+            display: flex;
+            align-items: center;
+            column-gap: 10px;
+            justify-content: space-between;
+
+            width: 150px;
+            .file_name {
+              white-space: nowrap;
+              width: 80px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+
+      .btn_attachment {
+        width: max-content;
       }
     }
   }
@@ -50,7 +96,7 @@
 .timeline_item {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 18px;
+  margin-bottom: 30px;
   position: relative;
   .content_card {
     .header_card {
@@ -74,6 +120,8 @@
     }
     .comment_card {
       padding: 15px 40px;
+    }
+    .footer_card {
     }
   }
 }
@@ -103,4 +151,16 @@
 
 .body_card {
   padding: 0 !important;
+}
+.content_modal {
+  // border: 1px solid green;
+  display: grid;
+  // flex-direction: column;
+  gap: 15px;
+  .btn_record {
+    justify-self: center;
+    border: 1px solid $primary;
+    padding: 50px;
+    border-radius: 100%;
+  }
 }

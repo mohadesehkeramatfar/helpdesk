@@ -57,6 +57,7 @@ const RegisterForm = () => {
       facing_side,
       password: password || null,
       authentication_ref_id: authentication_ref_id,
+      semver: null,
       otp_code,
     };
 

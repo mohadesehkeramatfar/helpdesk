@@ -35,9 +35,6 @@ export const decodeToken = (token?: string): DecodedToken => {
 export const setRefreshToken = (token: string) => {
   return setCookies('refresh', token);
 };
-// export const setPrivilege = (token: string) => {
-//   return setCookies('privileges', token);
-// };
 
 export const isTokenExpired = (token?: string): boolean => {
   if (!token && !getCookies('access')) return true;

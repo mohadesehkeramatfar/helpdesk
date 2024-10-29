@@ -1,16 +1,72 @@
 @import '@/app/variables.module.scss';
+// .header_container {
+//   padding: 10px;
+//   background-color: white;
+//   border-bottom: 1px solid #f0f0f0;
+//   margin-bottom: 50px;
+//   position: sticky;
+//   width: 100%;
+//   top: 0;
+//   .header {
+//     display: flex;
+//     justify-content: space-between;
+//     // align-items: center;
+//     .right_side {
+//       display: flex;
+//       align-items: center;
+//       gap: 25px;
+
+//       .list_menu {
+//         display: flex;
+//         align-items: center;
+//         // border: 1px solid red;
+//         column-gap: 20px;
+//         @media screen and (max-width: 700px) {
+//           display: none;
+//         }
+//         li {
+//           font-size: 16px;
+//           &[data-active='true'] {
+//             color: $primary;
+//           }
+//         }
+//       }
+//     }
+//     .left_side {
+//       display: flex;
+//       align-items: center;
+//       gap: 25px;
+//       .auth_container {
+//         display: flex;
+//         align-items: center;
+//         column-gap: 18px;
+//       }
+//       button {
+//         font-size: 1.4rem;
+//         :nth-child(2) {
+//           padding-bottom: 5px;
+//         }
+//       }
+//     }
+//   }
+// }
 .header_container {
-  padding: 10px;
-  background-color: white;
-  border-bottom: 1px solid #f0f0f0;
-  margin-bottom: 50px;
-  position: sticky;
+  position: fixed;
   width: 100%;
-  top: 0;
+  z-index: 10;
+  padding: 12px 0;
+  // border: 1px solid red;
+  background-color: $gray-100;
+  // background-color: white;
+  // color: white;
+  // opacity: 0.1;
+  // color: white;
+
   .header {
     display: flex;
     justify-content: space-between;
-    // align-items: center;
+    // max-width: 1300px;
+    // margin: auto;
     .right_side {
       display: flex;
       align-items: center;
@@ -27,7 +83,10 @@
         li {
           font-size: 16px;
           &[data-active='true'] {
-            color: $secondary;
+            color: $primary;
+            // color: $gray-300;
+
+            // font-weight: 700;
           }
         }
       }
@@ -43,6 +102,7 @@
       }
       button {
         font-size: 1.4rem;
+        // color: white !important;
         :nth-child(2) {
           padding-bottom: 5px;
         }

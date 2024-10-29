@@ -1,0 +1,172 @@
+@import '@/app/variables.module.scss';
+.send_ticket_container {
+  // max-width: 900px;
+  margin: auto;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+
+  .info_container {
+    border-bottom: 1px solid $gray-200;
+    padding: 0 0 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 25px;
+    font-size: 1.4rem;
+    .header_info {
+      display: flex;
+      // align-items: center;
+      column-gap: 10px;
+      border-bottom: 1px solid $gray-200;
+      svg {
+        color: $gray-700 !important;
+      }
+    }
+    .info_content {
+      display: flex;
+      column-gap: 140px;
+      flex-wrap: wrap;
+      row-gap: 30px;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      row-gap: 15px;
+      .label {
+        color: $gray-500;
+      }
+      .answer {
+      }
+    }
+  }
+  .form_container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+
+    .form_item {
+      align-self: flex-end;
+      @media screen and (max-width: $mobile-width) {
+        width: 100%;
+      }
+      .btn {
+        @media screen and (max-width: $mobile-width) {
+          width: 100%;
+        }
+      }
+    }
+    .question_section {
+      display: grid;
+      row-gap: 15px;
+      .message_content {
+        width: 100%;
+      }
+      .attachment_contatiner {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: min-content;
+        margin-top: 30px;
+
+        .upload_record_container {
+          display: flex;
+          gap: 10px;
+          // border: 1px solid red;
+          // width: 80%;
+
+          // width: 0%;
+          .file_container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+          }
+          @media screen and (max-width: $mobile-width) {
+            flex-direction: column;
+            // width: min-content;
+          }
+        }
+        .upload_file_container {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          .file_list_container {
+            display: flex;
+            flex-direction: column;
+            // gap: 10px;
+            // width: 130%;
+            .file_container {
+              display: flex;
+              align-items: center;
+              column-gap: 10px;
+              justify-content: space-between;
+
+              width: 150px;
+              .file_name {
+                white-space: nowrap;
+                width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+          }
+        }
+
+        .btn_attachment {
+          width: min-content;
+        }
+      }
+    }
+    .title {
+      font-size: 1.8rem;
+    }
+    .text {
+      font-size: 1.4rem;
+    }
+    .radio_container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      overflow: hidden;
+    }
+    .referral_time_container {
+      display: flex;
+      flex-direction: column;
+      row-gap: 20px;
+      .date_card_container {
+        display: flex;
+        align-items: center;
+        overflow: auto;
+        padding-bottom: 10px;
+        column-gap: 20px;
+        .date_card {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+      .time_container {
+        display: flex;
+        flex-direction: column;
+        row-gap: 15px;
+      }
+      .selected {
+        border: 1px solid $primary;
+      }
+    }
+  }
+}
+.content_modal {
+  // border: 1px solid green;
+  display: grid;
+  // flex-direction: column;
+  gap: 15px;
+  .btn_record {
+    justify-self: center;
+    border: 1px solid $primary;
+    padding: 50px;
+    border-radius: 100%;
+    @media screen and (max-width: $mobile-width) {
+      padding: 30px;
+    }
+  }
+}
