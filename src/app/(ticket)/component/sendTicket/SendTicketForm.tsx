@@ -119,41 +119,50 @@ const SendTicketForm = ({
         await postUnitTicketPostSubmit({ data: ticketPostData });
 
       if (audioBlobFile && audioURL && fileList.length > 0) {
-        const audioFile = new File(
-          [audioBlobFile],
-          `recording${new Date()}.wav`,
-          {
-            type: 'audio/wav',
-          },
-        );
-        const formData = new FormData();
-        formData.append('file', audioFile);
-        try {
-          fileList.map(async (file) => {
-            const formData = new FormData();
-            formData.append('file', file?.originFileObj);
-            const x = await patchTicketPostAdd({
+        if (audioBlobFile && audioURL) {
+          const audioFile = new File(
+            [audioBlobFile],
+            `recording${new Date()}.wav`,
+            {
+              type: 'audio/wav',
+            },
+          );
+
+          const formData = new FormData();
+          formData.append('file', audioFile);
+
+          try {
+            await patchTicketPostAdd({
               id: postUnitTicketPostSubmitResponsed.id,
               data: formData,
             });
-            setFileList([]);
-            console.log('patchTicketPostAdd', x);
-          });
-
-          await patchTicketPostAdd({
-            id: postUnitTicketPostSubmitResponsed.id,
-            data: formData,
-          });
-          setAudioURL('');
-
-          successTicket(postUnitTicketSubmitResponse.id);
-        } catch (error) {
-          deleteFiles(
-            postUnitTicketPostSubmitResponsed.id,
-            postUnitTicketSubmitResponse.id,
-          );
+            setAudioURL('');
+          } catch (error) {
+            deleteFiles(
+              postUnitTicketPostSubmitResponsed.id,
+              postUnitTicketSubmitResponse.id,
+            );
+          }
         }
-
+        if (fileList.length > 0) {
+          fileList.map(async (file) => {
+            const formData = new FormData();
+            formData.append('file', file?.originFileObj);
+            try {
+              await patchTicketPostAdd({
+                id: postUnitTicketPostSubmitResponsed.id,
+                data: formData,
+              });
+              setFileList([]);
+            } catch (error) {
+              deleteFiles(
+                postUnitTicketPostSubmitResponsed.id,
+                postUnitTicketSubmitResponse.id,
+              );
+            }
+          });
+        }
+        successTicket(postUnitTicketSubmitResponse.id);
         return;
       }
       if (audioBlobFile && audioURL) {
