@@ -117,6 +117,7 @@ const SendTicketForm = ({
       };
       const { data: postUnitTicketPostSubmitResponsed } =
         await postUnitTicketPostSubmit({ data: ticketPostData });
+
       if (audioBlobFile && audioURL && fileList.length > 0) {
         const audioFile = new File(
           [audioBlobFile],
@@ -125,20 +126,20 @@ const SendTicketForm = ({
             type: 'audio/wav',
           },
         );
-
         const formData = new FormData();
         formData.append('file', audioFile);
-
         try {
           fileList.map(async (file) => {
             const formData = new FormData();
             formData.append('file', file?.originFileObj);
-            await patchTicketPostAdd({
+            const x = await patchTicketPostAdd({
               id: postUnitTicketPostSubmitResponsed.id,
               data: formData,
             });
             setFileList([]);
+            console.log('patchTicketPostAdd', x);
           });
+
           await patchTicketPostAdd({
             id: postUnitTicketPostSubmitResponsed.id,
             data: formData,
@@ -245,22 +246,13 @@ const SendTicketForm = ({
     >
       {/* PARENT CATEGORY */}
       <div className={`${style.question_section}`}>
-        <span className={`${style.text}`}>
-          مشکل شما در مورد کدام دسته یا دپارتمان است؟{' '}
-        </span>
+        <Text style={{ fontWeight: 'bold' }}>مشکل شما چیست؟ </Text>
         <Radio.Group
           value={parentCategoryValue}
           className={`${style.radio_container}`}
         >
           {categoryList.map(
-            (
-              item: {
-                icon: string;
-                name: string;
-                id: string;
-              },
-              index: string | number,
-            ) => {
+            (item: { icon: string; name: string; id: string }) => {
               return (
                 <RadioCard
                   key={item.id}
@@ -283,34 +275,30 @@ const SendTicketForm = ({
             <Spin />
           ) : (
             <div className={`${style.question_section}`}>
-              <span className={`${style.text}`}>
-                لطفا بخش مربوطه را انتخاب نمایید.
-              </span>
+              <Text style={{ fontWeight: 'bold' }}>
+                مشکل شما در کدام دسته قرار میگیرد؟
+              </Text>
               <Radio.Group
                 value={subCategoryValue}
                 className={`${style.radio_container}`}
               >
-                {subCategoryList.map(
-                  (
-                    item: { name: string; id: string },
-                    index: string | number,
-                  ) => {
-                    return (
-                      <RadioCard
-                        key={item.id}
-                        id={item.id}
-                        text={item.name}
-                        hasImage={false}
-                        selected={subCategoryValue === item.id}
-                        onSelect={onChangeSubCategory}
-                      />
-                    );
-                  },
-                )}
+                {subCategoryList.map((item: { name: string; id: string }) => {
+                  return (
+                    <RadioCard
+                      key={item.id}
+                      id={item.id}
+                      text={item.name}
+                      hasImage={false}
+                      selected={subCategoryValue === item.id}
+                      onSelect={onChangeSubCategory}
+                    />
+                  );
+                })}
               </Radio.Group>
             </div>
           ))}
       </div>
+
       {/* MESSAGES AND ATTACHMENT */}
       <div className={`${style.question_section}`} ref={refDesc}>
         <div className={`${style.message_content}`}>
@@ -322,7 +310,8 @@ const SendTicketForm = ({
               },
             ]}
             name="message"
-            label="شرح مشکل"
+            label="مشکل خود را شرح دهید"
+            style={{ fontWeight: 'bold' }}
             // required
           >
             <TextArea rows={4} />
@@ -393,8 +382,8 @@ const SendTicketForm = ({
         <Flex vertical={true} gap={'5px'}>
           {' '}
           <Text style={{ fontSize: isMobile ? '12px' : '14px' }}>
-            زمان مراجعه کارشناسان به واحد شما ممکن است بدلیل تأمین قطعات یا
-            هماهنگی با سایر دپارتمان‌ها، با زمان پیشنهادی شما اختلاف داشته باشد.
+            زمان مذکور، زمان پیشنهادی شماست و زمان قطعی مراجعه کارشناس با شما
+            هماهنگ خواهد شد.
           </Text>
         </Flex>
         <div className={`${style.date_card_container}`}>
