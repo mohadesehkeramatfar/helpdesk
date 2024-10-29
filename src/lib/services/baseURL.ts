@@ -3,7 +3,7 @@ import { getRefreshToken, getToken, setToken } from '../token';
 import { API_ENDPOINTS } from './endpoints';
 
 export const client = axios.create({
-  baseURL: 'http://172.16.203.64:8080',
+  baseURL: 'http://172.16.203.64:6001',
 });
 
 const renewToken = async () => {
