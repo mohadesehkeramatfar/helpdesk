@@ -71,8 +71,8 @@ const MyTickets = () => {
         return (
           <Flex vertical gap={'5px'}>
             {' '}
-            <Text>{categories[0]?.name}</Text>
-            <Text type="secondary">{categories[1]?.name}</Text>
+            <Text>{categories[1]?.name}</Text>
+            <Text type="secondary">{categories[0]?.name}</Text>
           </Flex>
         );
       },
