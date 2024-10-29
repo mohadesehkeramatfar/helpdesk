@@ -78,7 +78,7 @@ export const useDeleteTicket = () => {
 export const useDeletePostTicket = () => {
   return useSWRMutation(
     API_ENDPOINTS.DELETE_POST_TICKET,
-    async (url, { arg }) => await request(`${url}${arg}`, 'DELETE', {}, true),
+    async (url, { arg }) => await request(`${url}${arg}/`, 'DELETE', {}, true),
   );
 };
 
@@ -86,5 +86,12 @@ export const useGetTicketTimeIntervalsList = () => {
   return useSWR(
     API_ENDPOINTS.GET_TICKET_TIME_INTERVALS_LIST,
     async (url) => await request(url, 'GET', {}, true),
+  );
+};
+
+export const useGetValidTicketTimeIntervals = () => {
+  return useSWR(
+    API_ENDPOINTS.GET_VALID_TICKET_TIME_INTERVALS,
+    async (url: string) => await request(`${url}`, 'GET', {}, true),
   );
 };
