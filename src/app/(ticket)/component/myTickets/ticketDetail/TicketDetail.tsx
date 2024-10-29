@@ -21,7 +21,6 @@ import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import style from './ticketDetail.module.scss';
 import TextArea from 'antd/es/input/TextArea';
-import useResponsive from '@/lib/hook/useResponsive';
 import { BiMessageRoundedDots } from 'react-icons/bi';
 import Link from 'next/link';
 import { MdAttachFile, MdOutlineKeyboardVoice } from 'react-icons/md';
@@ -34,7 +33,6 @@ const { Text, Title } = Typography;
 const TicketDetail = () => {
   const { id } = useParams();
   const [ticketForm] = useForm();
-  const { isMobile } = useResponsive();
   const { trigger: getTicketTimeline, isMutating: getTicketTimelineLoading } =
     useGetTicketTimeline();
   const { trigger: getUnitTicketDetail } = useUnitTicketDetail();
@@ -59,6 +57,7 @@ const TicketDetail = () => {
   const [hasMore, setHasMore] = useState(true);
   const [testLoading, setTestLoading] = useState(true);
   const offsetRef = useRef(offset);
+  const [isFetching, setIsFetching] = useState(false);
   const startRecording = () => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       mediaRecorderRef.current = new MediaRecorder(stream);
@@ -104,7 +103,7 @@ const TicketDetail = () => {
     setRemovedFiles((prev) => [...prev, file]);
     setFileList((prevList) => prevList.filter((item) => item.uid !== file.uid));
   };
-  const [isFetching, setIsFetching] = useState(false);
+
   const fetchTimelineData = async () => {
     if (isFetching) return;
 
@@ -194,7 +193,7 @@ const TicketDetail = () => {
   }
 
   let picNumber = 1;
-  const { categories, unit, status, created_at, visit_interval } =
+  const { categories, user, status, created_at, visit_interval } =
     unitTicketDetail;
 
   return (
@@ -211,9 +210,9 @@ const TicketDetail = () => {
           </Tag>
           <Text type="secondary">
             توسط{` `}
-            {unit?.first_name}
+            {user?.first_name}
             {` `}
-            {unit?.last_name}
+            {user?.last_name}
           </Text>
           <Text type="secondary">
             {moment(created_at).format('jYYYY/jM/jD ساعت HH:mm')}
@@ -221,7 +220,8 @@ const TicketDetail = () => {
         </div>
         <Flex gap={'10px'}>
           <Text>زمان پیشنهادی مراجعه</Text>
-          <Text>{moment(visit_interval.date).format('jYYYY/jM/jD ')}</Text>
+          <Text>{visit_interval.date}</Text>
+          {/* <Text>{moment(visit_interval.date).format('jYYYY/jM/jD ')}</Text> */}
           <Text>
             ساعت {visit_interval.start_time.split(':')[0]}:
             {visit_interval.start_time.split(':')[1]}
@@ -235,13 +235,6 @@ const TicketDetail = () => {
 
       {/* TIMELINE */}
       <div className={`${style.timeline}`}>
-        {/* <InfiniteScroll
-          dataLength={timelineList.length}
-          next={fetchTimelineData}
-          hasMore={hasMore}
-          loader={<Spin />}
-          // endMessage={<p>No more data to load</p>}
-        > */}
         {timelineList.map((item) => {
           return (
             <div key={item.id} className={`${style.timeline_item}`}>
@@ -477,97 +470,3 @@ const TicketDetail = () => {
   );
 };
 export default TicketDetail;
-
-// const renderedTimeline = (item: {
-//   type: string;
-//   status: { title: string; color: string };
-//   history_date: string;
-//   author: {};
-// }) => {
-//   const { type, status, history_date, author, history_user } = item;
-//   switch (type) {
-//     case 'Ticket':
-//       return (
-//         <div className={`${style.timeline_item}`}>
-//           <div className={`${style.timeline_icon}`}>
-//             <GoTag size={17} strokeWidth={1.5} color="#757575" />
-//           </div>
-
-//           <Flex
-//             {...(isMobile ? { vertical: true } : { vertical: false })}
-//             gap={'5px'}
-//             style={{ padding: ' 4px 10px' }}
-//           >
-//             <Flex gap={'10px'}>
-//               <Text type="secondary">تغییر وضعیت</Text>
-//               <Tag color={status?.color}>{status?.title}</Tag>
-//             </Flex>
-//             <Flex gap={'10px'}>
-//               <Text type="secondary">
-//                 توسط {history_user.first_name}
-//                 {` `}
-//                 {history_user.last_name}
-//               </Text>
-//               <Divider
-//                 type="vertical"
-//                 style={{ height: '25px', border: '1px solid #eeeeee' }}
-//               />
-//               <div>
-//                 <Text type="secondary">
-//                   {moment(history_date).format('jYYYY/jM/jD')}
-//                 </Text>
-//                 <Text type="secondary">---</Text>
-//                 <Text type="secondary">
-//                   {moment(history_date).format('HH:mm')}
-//                 </Text>
-//               </div>
-//             </Flex>
-//           </Flex>
-//         </div>
-//         // </div>
-//       );
-//     case 'TicketPost':
-//       return (
-//         <div className={`${style.timeline_item}`}>
-//           <Card
-//             style={{ padding: 0, border: '1px solid #eee' }}
-//             styles={{ body: { padding: '0' } }}
-//             className={`${style.timeline_content}`}
-//           >
-//             <div className={`${style.content_card}`}>
-//               <div className={`${style.header_card}`}>
-//                 <div className={`${style.user_info}`}>
-//                   <BiMessageRoundedDots color="#757575" size={26} />
-//                   <Text style={{ fontWeight: 600 }}>
-//                     توسط {author?.first_name} {` `} {author?.last_name}
-//                   </Text>
-//                 </div>
-//                 <Divider
-//                   type="vertical"
-//                   style={{ height: '25px', border: '1px solid #eeeeee' }}
-//                 />
-//                 <div className={`${style.date_info}`}>
-//                   <Text type="secondary">
-//                     {'   '}
-//                     {moment(history_date).format('jYYYY/jM/jD ')}
-//                   </Text>
-//                   <Text type="secondary">---</Text>
-//                   <Text type="secondary">
-//                     {'   '}
-//                     {moment(history_date).format('HH:mm')}
-//                   </Text>
-//                 </div>
-//               </div>
-//               <Divider style={{ padding: 0, margin: 0 }} />
-//               <div className={`${style.comment_card}`}>
-//                 <Text> {item?.message}</Text>
-//               </div>
-//             </div>
-//           </Card>
-//         </div>
-//       );
-
-//     default:
-//       return null;
-//   }
-// };
