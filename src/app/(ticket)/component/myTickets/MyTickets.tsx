@@ -16,9 +16,8 @@ import {
 } from '../../api/ticket';
 import style from './myTicket.module.scss';
 import globalStyle from '@/app/layout.module.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import useResponsive from '@/lib/hook/useResponsive';
 import { CgDetailsMore } from 'react-icons/cg';
 const { Text, Title } = Typography;
 
@@ -27,10 +26,10 @@ const MyTickets = () => {
   const { data: getUnitTicketList, isLoading: getUnitTicketListLoading } =
     useGetUnitTicketList();
   const {
-    data: getTicketStatusTagReport,
-    isLoading: ticketStatusTagReportLoading,
+    trigger: getTicketStatusTagReport,
+    isMutating: ticketStatusTagReportLoading,
   } = useGetTicketStatusTagReport();
-  const { isMobile } = useResponsive();
+  const [statisticData, setStatisticData] = useState([]);
   const [ticketListPagination, setTicketListPagination] = useState({
     total: 0,
     current: 1,
@@ -40,6 +39,16 @@ const MyTickets = () => {
     const { current } = page;
     setTicketListPagination({ ...ticketListPagination, current });
   };
+
+  const fetchTicketStatusTagReport = async () => {
+    const { data: ticketStatusTagReportResponsed } =
+      await getTicketStatusTagReport();
+    setStatisticData(ticketStatusTagReportResponsed);
+  };
+
+  useEffect(() => {
+    fetchTicketStatusTagReport();
+  }, []);
 
   if (
     getUnitTicketListLoading ||
@@ -62,8 +71,8 @@ const MyTickets = () => {
         return (
           <Flex vertical gap={'5px'}>
             {' '}
-            <Text>{categories[0]?.parent?.name}</Text>
-            <Text type="secondary">{categories[0]?.name}</Text>
+            <Text>{categories[0]?.name}</Text>
+            <Text type="secondary">{categories[1]?.name}</Text>
           </Flex>
         );
       },
@@ -113,7 +122,6 @@ const MyTickets = () => {
     },
   ];
   const unitTicketList = getUnitTicketList.data.results;
-  const { data: resultOfgetTicketStatusTagReport } = getTicketStatusTagReport;
 
   return (
     <div className={`${style.my_ticket_container}`}>
@@ -121,7 +129,7 @@ const MyTickets = () => {
       <div className={`${style.title_container}`}>
         <Title level={4}>تیکت‌های من</Title>
         <div className={`${style.statistics_container}`}>
-          {statisticData.map((item, index) => (
+          {statisticData.map((item) => (
             <Statistic
               key={item.id}
               style={{
@@ -130,7 +138,7 @@ const MyTickets = () => {
                 alignItems: 'center',
               }}
               title={<Text>{item.title}</Text>}
-              value={150}
+              value={item.ticket_count}
               // {item.value}
               valueStyle={{ color: item.color }}
             />

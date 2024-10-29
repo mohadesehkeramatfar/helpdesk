@@ -95,3 +95,10 @@ export const useGetValidTicketTimeIntervals = () => {
     async (url: string) => await request(`${url}`, 'GET', {}, true),
   );
 };
+//
+export const useGetTicketStatusTagReport = () => {
+  return useSWRMutation(
+    API_ENDPOINTS.GET_TICKET_STATUS_TAG_REPORT,
+    async (url: string) => await request(`${url}`, 'GET', {}, true),
+  );
+};
