@@ -1,0 +1,21 @@
+.container {
+  // background-image: url('../../../public/image/access2.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  // border: 1px solid red;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  .title {
+    font-size: 2rem;
+    text-align: center;
+  }
+  .link {
+    font-size: 1.6rem;
+    color: #0068ec;
+    text-align: center;
+  }
+}
