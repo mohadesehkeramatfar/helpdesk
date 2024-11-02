@@ -10,10 +10,11 @@ import RecordModal from './RecordModal';
 import ReplyForm from './ReplyForm';
 import TimeLine from './Timeline';
 import TitleDetail from './TitleDetail';
+import { useError } from '@/lib/hook/errorContext';
 
 const TicketDetail = () => {
   const { id } = useParams();
-
+  const { handleError } = useError();
   const { trigger: getTicketTimeline, isMutating: getTicketTimelineLoading } =
     useGetTicketTimeline();
   const { trigger: getUnitTicketDetail } = useUnitTicketDetail();
@@ -45,6 +46,7 @@ const TicketDetail = () => {
       setTimelineList(ticketTimelineResponsed.results);
       setTestLoading(false);
     } catch (error) {
+      handleError(error);
     } finally {
       setIsFetching(false);
     }

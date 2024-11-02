@@ -39,7 +39,6 @@ const SendTicket = () => {
       setUserInfo(userInfo);
     } catch (error) {
       handleError(error);
-      // toast.error(generalMessage);
     }
   };
   const fetchParentCategory = async () => {

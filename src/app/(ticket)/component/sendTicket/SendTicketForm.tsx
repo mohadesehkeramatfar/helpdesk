@@ -27,6 +27,7 @@ import TextArea from 'antd/es/input/TextArea';
 import { MdAttachFile, MdOutlineKeyboardVoice } from 'react-icons/md';
 import { AiOutlineDelete } from 'react-icons/ai';
 import useResponsive from '@/lib/hook/useResponsive';
+import { useError } from '@/lib/hook/errorContext';
 const { Title, Text } = Typography;
 
 const SendTicketForm = ({
@@ -44,6 +45,7 @@ const SendTicketForm = ({
 }) => {
   const [ticketForm] = useForm();
   const router = useRouter();
+  const { handleError } = useError();
   const refSubCategory = useRef(null);
   const refDesc = useRef(null);
   const { isMobile } = useResponsive();
@@ -80,7 +82,9 @@ const SendTicketForm = ({
 
       setSubCategoryList(subCategoriesListResponsed);
       refSubCategory?.current?.scrollIntoView({ behavior: 'smooth' });
-    } catch (error) {}
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   const onChangeSubCategory = (id) => {
@@ -214,7 +218,9 @@ const SendTicketForm = ({
       if (!fileList.length && !audioURL) {
         successTicket(postUnitTicketSubmitResponse.id);
       }
-    } catch (error) {}
+    } catch (error) {
+      handleError(error);
+    }
   };
   const uploadHandler = (e) => {
     const currentFile = e.file;
@@ -246,6 +252,7 @@ const SendTicketForm = ({
     acc[item.date].data.push(item);
     return acc;
   }, {});
+
   return (
     <Form
       form={ticketForm}

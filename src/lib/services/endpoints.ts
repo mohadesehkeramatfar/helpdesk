@@ -26,5 +26,5 @@ export const API_ENDPOINTS = {
   GET_TICKET_TIME_INTERVALS_LIST: '/ticket/ticket_time_intervals_list/',
   GET_VALID_TICKET_TIME_INTERVALS: '/ticket/get_valid_ticket_time_intervals/',
   PATCH_TICKET_POST_ASSET_ADD: '/ticket/ticket_post_asset_add/',
-  GET_TICKET_STATUS_TAG_REPORT: '/ticket/ticket_status_tag_report/',
+  GET_USER_TICKETS_REPORT: '/ticket/user_tickets_report/',
 };

@@ -9,6 +9,7 @@ import {
   usePatchTicketPostAdd,
   usePostUnitTicketPostSubmit,
 } from '@/app/(ticket)/api/ticket';
+import { useError } from '@/lib/hook/errorContext';
 
 const { Title } = Typography;
 
@@ -25,6 +26,7 @@ const ReplyForm = ({
   id,
 }) => {
   const [ticketForm] = useForm();
+  const { handleError } = useError();
   const {
     trigger: postUnitTicketPostSubmit,
     isMutating: postUnitTicketLoading,
@@ -52,20 +54,29 @@ const ReplyForm = ({
     });
     const formData = new FormData();
     formData.append('file', audioFile);
-    await patchTicketPostAdd({ id: postId, data: formData });
-    setAudioURL('');
-    await fetchTimelineData();
+    try {
+      await patchTicketPostAdd({ id: postId, data: formData });
+      setAudioURL('');
+      // fetchTimelineData();
+    } catch (error) {
+      // deleteFiles
+    }
   };
   const handleFileUploads = async (postId: string) => {
-    await Promise.all(
-      fileList.map(async (file) => {
-        const formData = new FormData();
-        formData.append('file', file.originFileObj);
-        await patchTicketPostAdd({ id: postId, data: formData });
-      }),
-    );
-    await fetchTimelineData();
-    setFileList([]);
+    fileList.map(async (file) => {
+      const formData = new FormData();
+      formData.append('file', file?.originFileObj);
+      try {
+        await patchTicketPostAdd({
+          id: postId,
+          data: formData,
+        });
+        setFileList([]);
+        console.log('file', file);
+      } catch (error) {}
+    });
+
+    // setFileList([]);
   };
 
   const handlePostTicket = async (values: { message: string }) => {
@@ -79,7 +90,15 @@ const ReplyForm = ({
     try {
       const { data: postUnitTicketPostSubmitResponsed } =
         await postUnitTicketPostSubmit({ data: ticketPostData });
+      if (audioBlobFile && audioURL && fileList.length > 0) {
+        if (audioBlobFile && audioURL)
+          handleAudioUpload(postUnitTicketPostSubmitResponsed.id);
+        if (fileList.length > 0)
+          handleFileUploads(postUnitTicketPostSubmitResponsed.id);
 
+        fetchTimelineData();
+        return;
+      }
       if (audioBlobFile && audioURL)
         handleAudioUpload(postUnitTicketPostSubmitResponsed.id);
       if (fileList.length > 0)
@@ -88,6 +107,7 @@ const ReplyForm = ({
       fetchTimelineData();
       ticketForm.resetFields();
     } catch (error) {
+      handleError(error);
     } finally {
       setNewMessageLoading(false);
     }

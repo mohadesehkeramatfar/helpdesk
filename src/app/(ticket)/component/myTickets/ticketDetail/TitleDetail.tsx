@@ -4,13 +4,17 @@ import moment from 'moment-jalaali';
 
 const { Title, Text } = Typography;
 const TitleDetail = ({ unitTicketDetail }) => {
-  const { categories, user, status, created_at, visit_interval } =
+  const { categories, user, status, created_at, visit_interval, ref_code } =
     unitTicketDetail;
+
   return (
     <div className={`${style.title_container}`}>
-      <Title level={4}>{categories[1].name}</Title>
+      <Flex align="center" gap={5}>
+        <Title level={4}>{ref_code}-</Title>
+        <Title level={4}>{categories[0].name}</Title>
+      </Flex>
       <Title type="secondary" level={5}>
-        ایراد {categories[0].name}
+        ایراد {categories[1].name}
       </Title>
       <div className={`${style.title_detail_container}`}>
         <Tag style={{ maxWidth: 'max-content' }} color={status?.color}>

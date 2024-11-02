@@ -19,12 +19,17 @@ import globalStyle from '@/app/layout.module.scss';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CgDetailsMore } from 'react-icons/cg';
+import { useError } from '@/lib/hook/errorContext';
 const { Text, Title } = Typography;
 
 const MyTickets = () => {
   const router = useRouter();
-  const { data: getUnitTicketList, isLoading: getUnitTicketListLoading } =
-    useGetUnitTicketList();
+  const { handleError } = useError();
+  const {
+    data: getUnitTicketList,
+    isLoading: getUnitTicketListLoading,
+    error: getUnitTicketListError,
+  } = useGetUnitTicketList();
   const {
     trigger: getTicketStatusTagReport,
     isMutating: ticketStatusTagReportLoading,
@@ -41,15 +46,23 @@ const MyTickets = () => {
   };
 
   const fetchTicketStatusTagReport = async () => {
-    const { data: ticketStatusTagReportResponsed } =
-      await getTicketStatusTagReport();
-    setStatisticData(ticketStatusTagReportResponsed);
+    try {
+      const { data: ticketStatusTagReportResponsed } =
+        await getTicketStatusTagReport();
+      setStatisticData(ticketStatusTagReportResponsed);
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   useEffect(() => {
     fetchTicketStatusTagReport();
   }, []);
 
+  if (getUnitTicketListError) {
+    handleError(getUnitTicketListError);
+    return;
+  }
   if (
     getUnitTicketListLoading ||
     !getUnitTicketList ||
@@ -58,6 +71,11 @@ const MyTickets = () => {
     return <Spin />;
   }
   const unitTicketListColumns = [
+    {
+      title: 'کد تیکت',
+      dataIndex: 'ref_code',
+      key: 'ref_code',
+    },
     {
       title: 'عنوان درخواست',
       dataIndex: 'categories',
@@ -71,8 +89,8 @@ const MyTickets = () => {
         return (
           <Flex vertical gap={'5px'}>
             {' '}
-            <Text>{categories[1]?.name}</Text>
-            <Text type="secondary">{categories[0]?.name}</Text>
+            <Text>{categories[0]?.name}</Text>
+            <Text type="secondary">{categories[1]?.name}</Text>
           </Flex>
         );
       },

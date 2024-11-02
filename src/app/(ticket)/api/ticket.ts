@@ -32,10 +32,13 @@ export const usePostUnitTicketPostSubmit = () => {
 };
 
 export const useGetUnitTicketList = () => {
-  return useSWR(
-    API_ENDPOINTS.GET_UNIT_TICKET_LIST,
-    async (url) => await request(url, 'GET', {}, true),
-  );
+  return useSWR(API_ENDPOINTS.GET_UNIT_TICKET_LIST, async (url) => {
+    try {
+      return await request(url, 'GET', {}, true);
+    } catch (error) {
+      throw error;
+    }
+  });
 };
 
 export const useUnitTicketDetail = () => {
@@ -98,7 +101,7 @@ export const useGetValidTicketTimeIntervals = () => {
 //
 export const useGetTicketStatusTagReport = () => {
   return useSWRMutation(
-    API_ENDPOINTS.GET_TICKET_STATUS_TAG_REPORT,
+    API_ENDPOINTS.GET_USER_TICKETS_REPORT,
     async (url: string) => await request(`${url}`, 'GET', {}, true),
   );
 };

@@ -1,6 +1,7 @@
 'use client';
 import React, { createContext, useContext } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 const ErrorContext = createContext();
 
@@ -12,22 +13,22 @@ export const ErrorProvider = ({ children }) => {
     if (!status) return;
     switch (status) {
       case 403:
-        // toast('شما مجاز به دسترسی به این بخش نیستید');
+        toast.error('شما مجاز به دسترسی به این بخش نیستید');
         router.push('/access-denied');
         break;
       case 404:
-        console.log('dddddddddddddddddd');
-
-        // toast('صفحه مورد نظر یافت نشد');
-        // router.push('/not-found');
+        toast.error('صفحه مورد نظر یافت نشد');
+        router.push('/not-found');
         break;
       case 500:
-        // toast('مشکلی در سرور به وجود آمده است, لطفا با پشتیبانی تماس بگیرید');
+        toast.error(
+          'مشکلی در سرور به وجود آمده است, لطفا با پشتیبانی تماس بگیرید',
+        );
 
         // router.push('/server-error');
         break;
       default:
-      // toast.error('یک خطای ناشناخته به وجود آمده است');
+        toast.error('یک خطای ناشناخته به وجود آمده است');
     }
   };
 
